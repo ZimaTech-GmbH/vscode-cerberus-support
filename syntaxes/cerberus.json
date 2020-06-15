@@ -1,0 +1,189 @@
+{
+    "scopeName": "source.cxs",
+    "patterns": [{ "include": "#phrase" }],
+    "repository": {
+        "phrase": {
+            "patterns": [
+                { "include": "#comment"},
+                { "include": "#preprocessor"},
+                { "include": "#decl" },
+                { "include": "#code" }
+            ]
+        },
+        "decl": {
+            "patterns": [
+                { "include": "#declFunction" },
+                { "include": "#declClass"},
+                { "include": "#declType"}
+            ]
+        },
+        "declFunction": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.cxs",
+                    "match": "(?i)(?<=(\\b(function|method)\\b)\\s+)[a-zA-Z_][a-zA-Z0-9_]*"
+                }
+            ]
+        },
+        "declClass": {
+            "patterns": [
+                {
+                    "name": "entity.name.class.cxs",
+                    "match": "(?i)(?<=(\\b(class)\\b)\\s+)[a-zA-Z_][a-zA-Z0-9_]*"
+                }
+            ]
+        },
+        "declType": {
+            "patterns": [
+                {
+                    "name": "meta.storage.type.cxs",
+                    "match": "(:)([a-zA-Z_][a-zA-Z0-9_\\.]*)",
+                    "captures": {
+                        "1": { "name": "punctuation.definition.annotation.cxs" },
+                        "2": { "name": "entity.name.type.cxs" }
+                    }
+                },
+                {
+                    "name": "entity.name.type.cxs",
+                    "match": "(?<=([a-zA-Z_][a-zA-Z0-9_]*))[\\?%#$]"
+                }
+            ]
+        },
+        "code": {
+            "patterns": [
+                { "include": "#codeLiteral" },
+                { "include": "#codeOperator" },
+                { "include": "#codeKeyword" },
+                { "include": "#codeIdentifierScoped" }
+            ]
+        },
+        "codeKeyword": {
+            "patterns": [
+                {
+                    "name": "keyword.control.cxs",
+                    "match": "(?i)\\b(Abstract|And|Array|Bool|Case|Catch|Class|Const|Continue|Default|Eachin|Else|ElseIf|End|EndIf|Enumerate|Exit|Extends|Extern|False|Field|Final|Float|For|Forever|Function|Global|If|Implements|Import|Include|Inline|Int|Interface|Local|Method|Mod|Module|New|Next|Not|Object|Or|Private|Property|Public|Repeat|Return|Select|Self|Shl|Shr|Step|Strict|String|Super|Then|Throw|To|True|Try|Until|Void|Wend|While)\\b"
+                }
+            ]
+        },
+        "codeIdentifier": {
+            "patterns": [
+                {
+                    "name": "support.function.cxs",
+                    "match": "[a-zA-Z_][a-zA-Z0-9_]*(?=\\()"
+                },
+                {
+                    "name": "support.variable.cxs",
+                    "match": "[a-zA-Z_][a-zA-Z0-9_]*"
+                }
+            ]
+        },
+        "codeIdentifierScoped": {
+            "patterns": [
+                { "include": "#codeIdentifier" },
+                { "include": "#codeScopeAccessors" }
+            ]
+        },
+        "codeScopeAccessors": {
+            "patterns": [
+                {
+                    "name": "punctuation.accessor.cxs",
+                    "match": "(?<=([a-zA-Z_][a-zA-Z0-9_]*|\\s|^))\\.(?=([a-zA-Z_]|$))"
+                }
+            ]
+        },
+        "codeOperator": {
+            "patterns": [
+                {
+                    "match": "(?i)\\+|-|~|\\*|\\/|&|\\||=|<|>|<=|>=|<>",
+                    "name": "keyword.operator.cxs"
+                }
+            ]
+        },
+        "codeLiteral": {
+            "patterns": [
+                {
+                    "name": "constant.language.cxs",
+                    "match": "(?i)\\b(True|False|Null)\\b"
+                },
+                {
+                    "name": "constant.numeric.float.cxs",
+                    "match": "[0-9]*\\.[0-9]+([eE][+-]?[0-9]+)"
+                },
+                {
+                    "name": "constant.numeric.integer.cxs",
+                    "match": "[0-9]+"
+                },
+                {
+                    "name": "constant.numeric.integer.binary.cxs",
+                    "match": "%[0-9]+"
+                },
+                {
+                    "name": "constant.numeric.integer.hexadecimal.cxs",
+                    "match": "\\$[a-fA-F0-9]+"
+                },
+                {
+                    "name": "constant.numeric.integer.other.cxs",
+                    "match": "`.`"
+                },
+                {
+                    "name": "constant.character.escape.cxs",
+                    "match": "`~([qgnrtz~]|u[a-fA-F0-9]{4})`"
+                },
+                {
+                    "name": "string.quoted.double.cxs",
+                    "begin": "\"",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.string.begin.cxs" }
+                    },
+                    "end": "\"",
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.string.end.cxs" }
+                    },
+                    "patterns": [
+                        
+                        {
+                            "name": "constant.character.escape.cxs",
+                            "match": "~([qgnrtz~]|u[a-fA-F0-9]{4})"
+                        }
+                    ]
+                }
+            ]
+        },
+        "comment": {
+            "patterns": [
+                {
+                    "name": "comment.block.cxs",
+                    "begin": "(?i)^\\s*#rem\\b",
+                    "beginCaptures": {
+                        "0": { "name": "comment.block.begin.cxs" }
+                    },
+                    "end": "(?i)^\\s*#end\\b",
+                    "endCaptures": {
+                        "0": { "name": "comment.block.end.cxs" }
+                    }
+                },
+                {
+                    "name": "comment.line.singlequote.cxs",
+                    "begin": "'",
+                    "end": "$"
+                }
+            ]
+        },
+        "preprocessor": {
+            "patterns": [
+                {
+                    "name": "meta.preprocessor.cxs",
+                    "begin": "(?i)^\\s*#(if.*|elseif.*|else)\\b",
+                    "end": "(?i)^\\s*#end\\b",
+                    "patterns": [
+                        { "include": "#phrase" }
+                    ]
+                },
+                {
+                    "name": "meta.preprocessor.cxs",
+                    "match": "(?i)^\\s*#.*\\b"
+                }
+            ]
+        }
+    }
+}

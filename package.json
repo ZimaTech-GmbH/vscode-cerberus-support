@@ -1,0 +1,70 @@
+{
+	"name": "vscode-cerberusx-support",
+	"displayName": "Cerberus X Support",
+	"description": "Support for the language Cerberus X",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.45.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:vscode-cerberusx-support.helloWorld",
+		"onCommand:vscode-cerberusx-support.showDocumentation",
+		"onLanguage:cerberus"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"languages": [
+			{
+				"id": "cerberus",
+				"extensions": [
+					".cxs"
+				],
+				"aliases": [
+					"Cerberus X"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "cerberus",
+				"scopeName": "source.cxs",
+				"path": "./syntaxes/cerberus.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "vscode-cerberusx-support.helloWorld",
+				"title": "Hello World"
+			},
+			{
+				"command": "vscode-cerberusx-support.showDocumentation",
+				"title": "Show Cerberus X Documentation"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.45.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"eslint": "^6.8.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0"
+	}
+}
