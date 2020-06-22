@@ -208,7 +208,10 @@
 					"end": "(?i)^\\s*#end\\b",
 					"endCaptures": {
 						"0": { "name": "comment.block.end.cxs" }
-					}
+					},
+					"patterns": [
+						{ "include": "#comment" }
+					]
 				},
 				{
 					"name": "comment.line.singlequote.cxs",
