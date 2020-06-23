@@ -50,6 +50,10 @@
 				{
 					"name": "entity.name.type.cxs",
 					"match": "(?<=([a-zA-Z_][a-zA-Z0-9_]*))[\\?%#$]"
+				},
+				{
+					"name": "punctuation.definition.annotation.cxs",
+					"match": "(?<=([a-zA-Z_][a-zA-Z0-9_]*))\\s*:="
 				}
 			]
 		},

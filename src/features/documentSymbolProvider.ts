@@ -194,7 +194,7 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
           }
           // extract first decl (identifier[type]=[value])
           // (value may actually contain following decls, will be stripped)
-          matches = text.match(/\s*([a-zA-Z_]\w*)(\s*[\?%#\$]\s*|\s*:\s*[a-zA-Z_]\w*\s*)?=?(.*)/);
+          matches = text.match(/\s*([a-zA-Z_]\w*)(\s*[\?%#\$]\s*|\s*:\s*[a-zA-Z_]\w*\s*|\s*:=\s*)?=?(.*)/);
           // can be null when comment occured
           if (matches) {
             const name = matches[1];
@@ -207,7 +207,11 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
             }
             // pretty print type and value
             let detail = type || '';
-            if (value) detail += "=" + value;
+            if (detail.indexOf(':=')>=1 && value) {
+              detail += value;
+            } else if (value) {
+              detail += "=" + value;
+            }
             // range of this single symbol
             const range: vscode.Range = new vscode.Range(
               line.lineNumber, charOffset,
