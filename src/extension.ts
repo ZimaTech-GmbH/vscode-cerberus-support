@@ -3,6 +3,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
+import { CxDocumentSymbolProvider } from './features/documentSymbolProvider';
+
 var decls: any;
 var curdecl: any;
 
@@ -64,6 +66,13 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			);
 		})
+	);
+
+	context.subscriptions.push(
+		vscode.languages.registerDocumentSymbolProvider(
+			{ scheme: 'file', language: 'cerberus' },
+			new CxDocumentSymbolProvider()
+		)
 	);
 
 	loadDecls();
