@@ -12,13 +12,13 @@
 	"activationEvents": [
 		"onCommand:vscode-cerberusx-support.helloWorld",
 		"onCommand:vscode-cerberusx-support.showDocumentation",
-		"onLanguage:cerberus"
+		"onLanguage:cerberusx"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"languages": [
 			{
-				"id": "cerberus",
+				"id": "cerberusx",
 				"extensions": [
 					".cxs"
 				],
@@ -30,7 +30,7 @@
 		],
 		"grammars": [
 			{
-				"language": "cerberus",
+				"language": "cerberusx",
 				"scopeName": "source.cxs",
 				"path": "./syntaxes/cerberus.json"
 			}
