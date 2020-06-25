@@ -1,6 +1,6 @@
 {
-	"name": "vscode-cerberusx-support",
-	"displayName": "Cerberus X Support",
+	"name": "cerberus-x",
+	"displayName": "Cerberus X",
 	"description": "Support for the language Cerberus X",
 	"version": "0.0.1",
 	"engines": {
@@ -10,15 +10,15 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:vscode-cerberusx-support.helloWorld",
-		"onCommand:vscode-cerberusx-support.showDocumentation",
-		"onLanguage:cerberusx"
+		"onCommand:cerberus-x.helloWorld",
+		"onCommand:cerberus-x.showDocumentation",
+		"onLanguage:cerberus-x"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"languages": [
 			{
-				"id": "cerberusx",
+				"id": "cerberus-x",
 				"extensions": [
 					".cxs"
 				],
@@ -30,21 +30,33 @@
 		],
 		"grammars": [
 			{
-				"language": "cerberusx",
+				"language": "cerberus-x",
 				"scopeName": "source.cxs",
 				"path": "./syntaxes/cerberus.json"
 			}
 		],
 		"commands": [
 			{
-				"command": "vscode-cerberusx-support.helloWorld",
-				"title": "Hello World"
+				"category": "Cerberus X",
+				"title": "Hello World",
+				"command": "cerberus-x.helloWorld"
 			},
 			{
-				"command": "vscode-cerberusx-support.showDocumentation",
-				"title": "Show Cerberus X Documentation"
+				"category": "Cerberus X",
+				"title": "Show Cerberus X Documentation",
+				"command": "cerberus-x.showDocumentation"
 			}
-		]
+		],
+		"configuration": {
+      "title": "Cerberus X",
+      "properties": {
+        "cerberusX.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to your Cerberus X installation."
+        }
+      }
+    }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
