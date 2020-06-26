@@ -1,3 +1,5 @@
+//zdoc ### src/features/documentSymbolProvider.ts ###
+
 import * as vscode from 'vscode';
 
 enum PreprocessorBlock {
@@ -5,9 +7,13 @@ enum PreprocessorBlock {
   Comment
 }
 
+/*zdoc
+Provides a `vscode.DocumentSymbol` tree for the outline
+zdoc*/
 export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
   private preprocessorStack: number[] = [];
 
+  //zdoc Builds the tree. Invoked automatically by VS Code.
   public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[] {
     // prepare root (file) symbol
     const fileName: string = (document.fileName.match(/[^\\\/]*$/) || ["untitled"])[0];

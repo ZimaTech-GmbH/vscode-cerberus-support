@@ -1,13 +1,19 @@
+//zdoc ### src/features/configuration.ts ###
+
 import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 
+/*zdoc
+Provides and checks configuration for Cerberus X
+zdoc*/
 export class CxConfiguration {
   private static onConfigurationValidCallbacks: any[] = [];
 
-  // get and set Cerberus X configurations
+  //zdoc Get Cerberus X configuration value from *section*
   public static get(section: string): any {
     return vscode.workspace.getConfiguration('cerberusX').get(section);
   }
+  //zdoc Set Cerberus X configuration value at *section*
   public static set(section: string, value: any): Thenable<void> {
     return vscode.workspace.getConfiguration('cerberusX').update(section, value, true);
   }

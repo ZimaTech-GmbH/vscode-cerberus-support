@@ -1,4 +1,3 @@
-this file was auto-generated with `zdoccer.sh`
 # VS Code extension for Cerberus X #
 
 `VS Code extension for Cerberus X` enables programming Cerberus X in Visual Studio Code. The goal of this extension is to provide basic and more sophisticated features necessary and useful for working with Cerberus X.
@@ -61,49 +60,3 @@ To update the `README.md`, run the `zdoccer.sh` script.
 `VS Code extension for Cerberus X` is split into multiple singleton classes, grouping similar functionalities or features of same context.
 
 ## Feature Documentation ##
----
-
-### src/extension.ts ###
-
----
-`export function activate(context: vscode.ExtensionContext)`
-
-This function is called when the extension is activated.
-See `package.json > "activationEvents"` for the definition of events that
-activate the extension.
-
-Checks the Cerberus X configuration and registers all handlers and providers.
-
----
-
-### src/features/configuration.ts ###
-
----
-`export class CxConfiguration`
-
-Provides and checks configuration for Cerberus X
-
----
-`  public static get(section: string): any`
-
-Get Cerberus X configuration value from *section*
-
----
-`  public static set(section: string, value: any): Thenable<void>`
-
-Set Cerberus X configuration value at *section*
-
----
-
-### src/features/documentSymbolProvider.ts ###
-
----
-`export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider`
-
-Provides a `vscode.DocumentSymbol` tree for the outline
-
----
-`  public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[]`
-
-Builds the tree. Invoked automatically by VS Code.
-
