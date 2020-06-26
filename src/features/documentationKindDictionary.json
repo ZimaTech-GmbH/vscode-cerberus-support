@@ -1,0 +1,71 @@
+{
+  "root": {
+    "name": "Home"
+  },
+  "root_modules": {
+    "name": "Modules"
+  },
+  "root_docs": {
+    "name": "Documents"
+  },
+  "module": {
+    "prefix": "Module",
+    "color": "--vscode-symbolIcon-moduleForeground"
+  },
+  "class": {
+    "prefix": "Class",
+    "color": "--vscode-symbolIcon-classForeground"
+  },
+  "interface": {
+    "prefix": "Interface",
+    "color": "--vscode-symbolIcon-interfaceForeground"
+  },
+  "function": {
+    "prefix": "Function",
+    "color": "--vscode-symbolIcon-functionForeground"
+  },
+  "const": {
+    "prefix": "Const",
+    "color": "--vscode-symbolIcon-constantForeground"
+  },
+  "global": {
+    "prefix": "Global",
+    "color": "--vscode-symbolIcon-variableForeground"
+  },
+  "enum": {
+    "prefix": "Enumerate",
+    "color": "--vscode-symbolIcon-enumeratorForeground"
+  },
+  "method": {
+    "prefix": "Method",
+    "color": "--vscode-symbolIcon-methodForeground"
+  },
+  "property": {
+    "prefix": "Property Method",
+    "color": "--vscode-symbolIcon-methodForeground"
+  },
+  "ctor": {
+    "prefix": "Constructor Method",
+    "color": "--vscode-symbolIcon-constructorForeground"
+  },
+  "classfunc": {
+    "prefix": "Function",
+    "color": "--vscode-symbolIcon-functionForeground"
+  },
+  "classconst": {
+    "prefix": "Const",
+    "color": "--vscode-symbolIcon-constantForeground"
+  },
+  "classglobal": {
+    "prefix": "Global",
+    "color": "--vscode-symbolIcon-variableForeground"
+  },
+  "classenum": {
+    "prefix": "Enumerate",
+    "color": "--vscode-symbolIcon-enumeratorForeground"
+  },
+  "field": {
+    "prefix": "Field",
+    "color": "--vscode-symbolIcon-fieldForeground"
+  }
+}

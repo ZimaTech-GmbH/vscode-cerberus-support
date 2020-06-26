@@ -95,6 +95,30 @@ Set Cerberus X configuration value at *section*
 
 ---
 
+### src/features/documentation.ts ###
+
+---
+`export class CxDocumentation`
+
+Global Cerberus X documentation declarations
+
+---
+`  public static rootDecl: DocDecl`
+
+Root DocDecl
+
+---
+`  public static show(): void`
+
+Register feature and prepare components
+
+---
+`  public static loadDecls()`
+
+Load declarations from docs/html/decls.json
+
+---
+
 ### src/features/documentSymbolProvider.ts ###
 
 ---

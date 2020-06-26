@@ -72,9 +72,9 @@ export class CxConfiguration {
     // show path selection dialog
     const options: vscode.OpenDialogOptions = {
       canSelectMany: false,
-			canSelectFolders: true,
-			canSelectFiles: false,
-			openLabel: 'Select'
+      canSelectFolders: true,
+      canSelectFiles: false,
+      openLabel: 'Select'
     }
     vscode.window.showOpenDialog(options).then(async (path) => {
       // when path was selected, set in config and check config again
