@@ -45,18 +45,38 @@
 				"category": "Cerberus X",
 				"title": "Show Cerberus X Documentation",
 				"command": "cerberus-x.showDocumentation"
+			},
+			{
+				"category": "Cerberus X",
+				"title": "Build as HTML5 application",
+				"command": "cerberus-x.buildHtml"
+			},
+			{
+				"category": "Cerberus X",
+				"title": "Run as HTML5 application",
+				"command": "cerberus-x.runHtml"
 			}
 		],
 		"configuration": {
-      "title": "Cerberus X",
-      "properties": {
-        "cerberusX.path": {
-          "type": "string",
-          "default": "",
-          "description": "Path to your Cerberus X installation."
-        }
-      }
-    }
+			"title": "Cerberus X",
+			"properties": {
+				"cerberusX.path": {
+					"type": "string",
+					"default": "",
+					"description": "Path to your Cerberus X installation."
+				},
+				"cerberusX.transccPath": {
+					"type": "string",
+					"default": "",
+					"description": "Path to transcc executable."
+				},
+				"cerberusX.cserverPath": {
+					"type": "string",
+					"default": "",
+					"description": "Path to cserver executable."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

@@ -8,6 +8,7 @@ Provides and checks configuration for Cerberus X
 zdoc*/
 export class CxConfiguration {
   private static onConfigurationValidCallbacks: any[] = [];
+  public static version: string = '';
 
   //zdoc Get Cerberus X configuration value from *section*
   public static get(section: string): any {
@@ -43,7 +44,8 @@ export class CxConfiguration {
         if (!version) {
           vscode.window.showInformationMessage('Could not retrieve current version from VERSIONS.TXT');
         } else {
-          vscode.window.showInformationMessage('Cerberus X ' + version[1] + ' up and running!');
+          this.version = version[1];
+          vscode.window.showInformationMessage('Cerberus X ' + this.version + ' up and running!');
         }
         // in either case, call on*valid callbacks
         for (const callback of this.onConfigurationValidCallbacks) {

@@ -3,6 +3,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as childProcess from 'child_process';
 
 import { CxDocumentSymbolProvider } from './features/documentSymbolProvider';
 import { CxConfiguration } from './features/configuration';
@@ -45,6 +46,72 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'cerberus-x.showDocumentation',
       () => {CxDocumentation.show()}
+    )
+  );
+
+  let outputChannel = vscode.window.createOutputChannel('transcc');
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'cerberus-x.buildHtml',
+      () => {
+        if (vscode.window.activeTextEditor?.document) {
+          const transccPath: string = CxConfiguration.get('transccPath');
+          const srcPath = vscode.window.activeTextEditor.document.uri.fsPath;
+
+          outputChannel.appendLine('Building HTML');
+          outputChannel.appendLine('transcc path: ' + transccPath);
+          outputChannel.appendLine('source file: ' + srcPath);
+
+          const args: string[] = ['-target="Html5_Game"', srcPath]
+
+          const proc = childProcess.spawn(transccPath, args);
+          proc.stdout.on('data', (data) => {
+            outputChannel.appendLine(data.toString());
+          });
+          proc.stderr.on('data', (data) => {
+            outputChannel.appendLine(data.toString());
+          });
+          proc.on('exit', (code) => {
+            outputChannel.appendLine('Process terminated.')
+            if (code) outputChannel.appendLine('Exit code: '+code);
+          });
+        }
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'cerberus-x.runHtml',
+      () => {
+        if (vscode.window.activeTextEditor?.document) {
+          const cserverPath: string = CxConfiguration.get('cserverPath');
+          const srcPath = vscode.window.activeTextEditor.document.uri.fsPath;
+
+          let outPath = srcPath.replace(/cxs$/,
+            'build' + CxConfiguration.version + '/html5/CerberusGame.html'
+          );
+
+          outputChannel.appendLine('Running HTML');
+          outputChannel.appendLine('cserver path: ' + cserverPath);
+          outputChannel.appendLine('game file: ' + outPath);
+
+          const args: string[] = [outPath];
+
+          const proc = childProcess.spawn(cserverPath, args);
+          proc.stdout.on('data', (data) => {
+            outputChannel.appendLine(data.toString());
+          });
+          proc.stderr.on('data', (data) => {
+            outputChannel.appendLine(data.toString());
+          });
+          proc.on('exit', (code) => {
+            outputChannel.appendLine('Process terminated.')
+            if (code) outputChannel.appendLine('Exit code: '+code);
+          });
+        }
+      }
     )
   );
 
