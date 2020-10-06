@@ -17,6 +17,7 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
   public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[] {
     // prepare root (file) symbol
     const fileName: string = (document.fileName.match(/[^\\\/]*$/) || ["untitled"])[0];
+    console.log('providing document symbols for', fileName);
     const fileRange: vscode.Range = new vscode.Range(0,0, 0,0).with(
       undefined, document.lineAt(document.lineCount-1).range.end
     )
@@ -36,6 +37,7 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     let charOffset: number = 0;
     // go through document
     for (let lineIdx = 0; lineIdx < document.lineCount; lineIdx++) {
+      if (token.isCancellationRequested) return [];
       const line: vscode.TextLine = document.lineAt( lineIdx );
       // ignore empty lines
       if (line.isEmptyOrWhitespace) continue;
