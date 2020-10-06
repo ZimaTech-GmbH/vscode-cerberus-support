@@ -1,6 +1,8 @@
 #!/bin/sh
 
 # ZimaTech source doccer, short zdoccer, MIT licensed
+# v1.1 - 2020-09-18 - added index generation
+# v1.0 - 2020-06-03 - initial version
 
 # This .sh file is independent of the project it's placed in. And therefore, the
 # project's license doesn't apply. On the other hand, this .sh file's license
@@ -90,6 +92,48 @@ grep -r -l '/*zdoc\|//zdoc' src | sort -n | xargs sed -n -r '
 }
 ' > README.project.md
 
+# build index
+cat README.preamble.md README.project.md README.termination.md > README.interm.md
+echo '# Index' > README.index.md
+
+sed -n -r '
+# blindly acquire all headings
+/^[#]+\s+/ {
+  # remove trailing whitespace and #
+  s/\s*[#]*$//
+  # copy to hold space
+  h
+  # replace headings with links
+  s/[#]([#]*)\s+(.+)/\1\[\2\]\(#/
+  # replace leading # with spaces or tabs or whatever (to indent)
+  :a
+  s/[#](.+)/\&emsp;\1/g
+  ta
+  # go to hold space
+  x
+  # remove leading markdown
+  s/^[#]+\s+//
+  # turn to lowercase
+  s/(.*)/\L\1/
+  # remove special chars
+  s/[^a-z0-9 _-]//g
+  # replace spaces
+  s/\s/-/g
+  # append to hold space (as new line)
+  H
+  # swap
+  x
+  # concat lines to one line
+  s/\n//g
+  # append ] and two spaces for line-break
+  s/(.*)/\1\)  /
+  # print
+  p
+}
+' README.interm.md >> README.index.md
+
 echo 'this file was auto-generated with `zdoccer.sh`' > README.md
-cat README.preamble.md README.project.md README.termination.md >> README.md
+cat README.index.md README.interm.md >> README.md
 rm README.project.md
+rm README.index.md
+rm README.interm.md
