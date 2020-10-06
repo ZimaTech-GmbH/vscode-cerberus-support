@@ -28,6 +28,7 @@ To keep the project folder tidy, we use the following structure:
 
 ```
 src/              # entry point (extension.ts)
+  assets/         # assets (to be compiled into the extension)
   features/       # features
   test/           # test suite
 syntaxes/         # Cerberus X syntax definition

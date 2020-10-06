@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="declicons.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 28 28"
+   height="28"
+   width="28">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer5"
+     inkscape:document-units="px"
+     inkscape:cy="12.716072"
+     inkscape:cx="10.801535"
+     inkscape:zoom="22.627417"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
+    <inkscape:grid
+       originy="14"
+       originx="14"
+       spacingy="2"
+       spacingx="2"
+       empspacing="4"
+       id="grid833"
+       type="xygrid" />
+    <inkscape:grid
+       spacingy="1"
+       spacingx="1"
+       originy="14"
+       originx="14"
+       dotted="true"
+       empspacing="4"
+       id="grid835"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="display:none"
+     inkscape:label="Module"
+     id="layer2"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:nodetypes="cccccccccccc"
+       d="m 27,3 -8,6 m 0,18 V 9 L 1,7 M 19,27 1,25 V 7 L 9,1 27,3 v 18 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path847" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Class"
+     id="layer3"
+     inkscape:groupmode="layer">
+    <path
+       d="m 8,21 c -4,0 -4,-6 0,-6 4,0 4,6 0,6 z m 15,-5 v 7 H 16 Z M 11,5 v 6 h 6 V 5 Z M 1,1 V 27 H 27 V 1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path863" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Interface"
+     id="layer4"
+     inkscape:groupmode="layer">
+    <path
+       d="M 1,12 V 8 M 1,20 V 16 M 4,27 H 1 v -3 m 11,3 H 8 m 12,0 h -4 m 11,-3 v 3 h -3 m 3,-11 v 4 M 27,8 v 4 M 24,1 h 3 V 4 M 16,1 h 4 M 8,1 h 4 M 1,4 V 1 h 3 m 4,20 c -4,0 -4,-6 0,-6 4,0 4,6 0,6 z m 15,-5 v 7 H 16 Z M 11,5 v 6 h 6 V 5 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path914" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Function"
+     id="layer5"
+     inkscape:groupmode="layer">
+    <path
+       d="m 9,23 6,-2 M 9,17 15,15 M 9,11 V 27 H 19 V 11 M 8,1 5,4 v 7 H 23 V 4 L 20,1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path924" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Const"
+     id="layer6"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:nodetypes="ccccc"
+       id="path1020"
+       d="M 21,7 H 7 L 5,21 h 18 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Global"
+     id="layer7"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:nodetypes="ccccc"
+       id="path934"
+       d="m 14,5 -9,9 9,9 9,-9 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Enum"
+     id="layer8"
+     inkscape:groupmode="layer">
+    <path
+       d="m 14,11 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z m 0,10 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z M 14,1 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path949" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Method"
+     id="layer9"
+     inkscape:groupmode="layer">
+    <path
+       d="m 22,5 -14,7 4,4 -6,7 14,-7 -4,-4 z M 1,1 V 27 H 27 V 1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path981" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Property"
+     id="layer10"
+     inkscape:groupmode="layer">
+    <path
+       d="M 23,5 H 15 L 5,15 v 8 h 8 L 23,13 Z M 1,1 H 27 V 27 H 1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path984" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Constructor"
+     id="layer11"
+     inkscape:groupmode="layer">
+    <path
+       d="m 9,13 v 4 H 1 M 27,1 V 7 H 19 V 1 Z M 7,7 h 6 V 3 H 7 Z M 1,11 V 27 H 27 V 11 h -8 v 2 H 9 v -2 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1000" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g1005"
+     inkscape:label="Class Function"
+     style="display:none">
+    <path
+       sodipodi:nodetypes="ccccccccccccccccccccccc"
+       d="m 24,1 h 3 V 27 H 22 M 4,1 H 1 v 26 h 5 m 3,-4 6,-2 M 9,17 15,15 M 9,11 V 27 H 19 V 11 M 8,1 5,4 v 7 H 23 V 4 L 20,1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1009" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g1014"
+     inkscape:label="Class Const"
+     style="display:none">
+    <path
+       d="M 21,7 H 7 L 5,21 H 23 Z M 1,1 H 27 V 27 H 1 Z"
+       style="display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1020-2" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g1056"
+     inkscape:label="Class Global"
+     style="display:none">
+    <path
+       d="M 1,1 H 27 V 27 H 1 Z m 13,4 -9,9 9,9 9,-9 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1058" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g1064"
+     inkscape:label="Class Enum"
+     style="display:none">
+    <path
+       d="m 20,1 h 7 V 27 H 20 M 8,1 H 1 v 26 h 7 m 6,-16 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z m 0,10 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z M 14,1 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1068" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Field"
+     id="layer12"
+     inkscape:groupmode="layer">
+    <path
+       d="m 14,7 c 9,0 9,14 0,14 C 5,21 5,7 14,7 Z M 1,1 H 27 V 27 H 1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1074" />
+  </g>
+  <g
+     style="display:none;opacity:0.996"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Document">
+    <path
+       d="m 17,1 v 8 h 8 M 3,1 V 27 H 25 V 9 L 17,1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path839" />
+  </g>
+  <g
+     style="display:inline"
+     inkscape:label="Index"
+     id="layer13"
+     inkscape:groupmode="layer">
+    <path
+       d="m 5,21 h 18 c 3,0 3,6 0,6 H 5 C 2,27 2,21 5,21 Z M 5,11 h 18 c 3,0 3,6 0,6 H 5 C 2,17 2,11 5,11 Z M 5,1 h 18 c 3,0 3,6 0,6 H 5 C 2,7 2,1 5,1 Z"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:6;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path1082" />
+  </g>
+</svg>

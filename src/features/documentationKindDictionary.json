@@ -1,71 +1,97 @@
 {
   "root": {
+    "icon": "&#x1f5ce;",
     "name": "Cerberus X"
   },
   "root_modules": {
+    "icon": "&#x1f5ce;",
     "name": "Modules"
   },
   "root_docs": {
+    "icon": "&#x1f5ce;",
     "name": "Documents"
   },
   "module": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 27,3 -8,6 m 0,18 V 9 L 1,7 M 19,27 1,25 V 7 L 9,1 27,3 v 18 z'/></svg>",
     "prefix": "Module",
     "color": "--vscode-symbolIcon-moduleForeground"
   },
   "class": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 8,21 c -4,0 -4,-6 0,-6 4,0 4,6 0,6 z m 15,-5 v 7 H 16 Z M 11,5 v 6 h 6 V 5 Z M 1,1 V 27 H 27 V 1 Z'/></svg>",
     "prefix": "Class",
     "color": "--vscode-symbolIcon-classForeground"
   },
   "interface": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='M 1,12 V 8 M 1,20 V 16 M 4,27 H 1 v -3 m 11,3 H 8 m 12,0 h -4 m 11,-3 v 3 h -3 m 3,-11 v 4 M 27,8 v 4 M 24,1 h 3 V 4 M 16,1 h 4 M 8,1 h 4 M 1,4 V 1 h 3 m 4,20 c -4,0 -4,-6 0,-6 4,0 4,6 0,6 z m 15,-5 v 7 H 16 Z M 11,5 v 6 h 6 V 5 Z'/></svg>",
     "prefix": "Interface",
     "color": "--vscode-symbolIcon-interfaceForeground"
   },
   "function": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 9,23 6,-2 M 9,17 15,15 M 9,11 V 27 H 19 V 11 M 8,1 5,4 v 7 H 23 V 4 L 20,1 Z'/></svg>",
     "prefix": "Function",
     "color": "--vscode-symbolIcon-functionForeground"
   },
   "const": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='M 21,7 H 7 L 5,21 h 18 z'/></svg>",
     "prefix": "Const",
     "color": "--vscode-symbolIcon-constantForeground"
   },
   "global": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 14,5 -9,9 9,9 9,-9 z'/></svg>",
     "prefix": "Global",
     "color": "--vscode-symbolIcon-variableForeground"
   },
   "enum": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 14,11 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z m 0,10 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z M 14,1 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z'/></svg>",
     "prefix": "Enumerate",
     "color": "--vscode-symbolIcon-enumeratorForeground"
   },
   "method": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 22,5 -14,7 4,4 -6,7 14,-7 -4,-4 z M 1,1 V 27 H 27 V 1 Z'/></svg>",
     "prefix": "Method",
     "color": "--vscode-symbolIcon-methodForeground"
   },
   "property": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='M 23,5 H 15 L 5,15 v 8 h 8 L 23,13 Z M 1,1 H 27 V 27 H 1 Z'/></svg>",
     "prefix": "Property Method",
     "color": "--vscode-symbolIcon-methodForeground"
   },
   "ctor": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 9,13 v 4 H 1 M 27,1 V 7 H 19 V 1 Z M 7,7 h 6 V 3 H 7 Z M 1,11 V 27 H 27 V 11 h -8 v 2 H 9 v -2 z'/></svg>",
     "prefix": "Constructor Method",
     "color": "--vscode-symbolIcon-constructorForeground"
   },
-  "classfunc": {
+  "classfunction": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 24,1 h 3 V 27 H 22 M 4,1 H 1 v 26 h 5 m 3,-4 6,-2 M 9,17 15,15 M 9,11 V 27 H 19 V 11 M 8,1 5,4 v 7 H 23 V 4 L 20,1 Z'/></svg>",
     "prefix": "Function",
     "color": "--vscode-symbolIcon-functionForeground"
   },
   "classconst": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='M 21,7 H 7 L 5,21 H 23 Z M 1,1 H 27 V 27 H 1 Z'/></svg>",
     "prefix": "Const",
     "color": "--vscode-symbolIcon-constantForeground"
   },
   "classglobal": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='M 1,1 H 27 V 27 H 1 Z m 13,4 -9,9 9,9 9,-9 z'/></svg>",
     "prefix": "Global",
     "color": "--vscode-symbolIcon-variableForeground"
   },
   "classenum": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 20,1 h 7 V 27 H 20 M 8,1 H 1 v 26 h 7 m 6,-16 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z m 0,10 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z M 14,1 c -4,0 -4,6 0,6 4,0 4,-6 0,-6 z'/></svg>",
     "prefix": "Enumerate",
     "color": "--vscode-symbolIcon-enumeratorForeground"
   },
   "field": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 14,7 c 9,0 9,14 0,14 C 5,21 5,7 14,7 Z M 1,1 H 27 V 27 H 1 Z'/></svg>",
     "prefix": "Field",
     "color": "--vscode-symbolIcon-fieldForeground"
+  },
+  "doc": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 17,1 v 8 h 8 M 3,1 V 27 H 25 V 9 L 17,1 Z'/></svg>",
+    "prefix": "Document"
+  },
+  "index": {
+    "icon": "<svg viewbox='0 0 28 28'><path d='m 5,21 h 18 c 3,0 3,6 0,6 H 5 C 2,27 2,21 5,21 Z M 5,11 h 18 c 3,0 3,6 0,6 H 5 C 2,17 2,11 5,11 Z M 5,1 h 18 c 3,0 3,6 0,6 H 5 C 2,7 2,1 5,1 Z'/></svg>",
+    "prefix": "Index"
   }
 }

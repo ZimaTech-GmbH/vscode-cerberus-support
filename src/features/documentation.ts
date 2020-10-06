@@ -49,13 +49,13 @@ export class CxDocumentation {
           // navigate to given site
           case 'navigateById':
             this.currentDecl = DocDecl.getByUid(message.text) || this.rootDecl;
-            vscode.window.showInformationMessage('by id'+message.text);
+            vscode.window.showInformationMessage('by id '+message.text);
             panel.webview.html = CxDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate to ident
           case 'navigate':
             this.currentDecl = this.currentDecl.find(message.text) || this.rootDecl;
-            vscode.window.showInformationMessage('by ident'+message.text);
+            vscode.window.showInformationMessage('by ident '+message.text);
             panel.webview.html = CxDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // search

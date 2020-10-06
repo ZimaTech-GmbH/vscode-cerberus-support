@@ -16,9 +16,22 @@ export class DocDecl {
   childs?: DocDecl[];
   parent?: DocDecl;
   // set by applying kind dictionary:
-  name: string|null = null;
-  prefix?: string;
-  color?: string;
+  get name(): string {
+    const specs = kindDictionary[this.kind] || {};
+    return specs.name || this.ident;
+  };
+  get icon(): string {
+    const specs = kindDictionary[this.kind] || {};
+    return specs.icon || '#';
+  }
+  get prefix(): string {
+    const specs = kindDictionary[this.kind] || {};
+    return specs.prefix || '';
+  }
+  get color(): string {
+    const specs = kindDictionary[this.kind] || {};
+    return specs.color || '--vscode-symbolIcon-textForeground';
+  }
   // for finder...
   // - to not end up in an endless loop
   private static _finderRun: number = 0;
@@ -38,12 +51,13 @@ export class DocDecl {
     this.kind = obj.kind || '';
     this.uid = obj.uid || '';
     this.target = obj.target || '';
-    // apply kindDictionary
-    const specs = kindDictionary[this.kind] || {};
-    // apply dictionary, fall back to defaults where necessary
-    this.prefix = specs.prefix;
-    this.name = specs.name;
-    this.color = specs.color || '--vscode-symbolIcon-textForeground';
+    // // apply kindDictionary
+    // const specs = kindDictionary[this.kind] || {};
+    // // apply dictionary, fall back to defaults where necessary
+    // this.icon = specs.icon || "-";
+    // this.prefix = specs.prefix;
+    // this.name = specs.name;
+    // this.color = specs.color || '--vscode-symbolIcon-textForeground';
     // for finder
     if (this.kind == 'root') {
       DocDecl._root = this;
@@ -58,11 +72,6 @@ export class DocDecl {
   //zdoc Get DocDecl by uid (must match exactly, always 6 digits)
   public static getByUid(uid: string): DocDecl|null {
     return this.byUid[uid];
-  }
-
-  // return decl name (or identifier, if name is not set)
-  public getName(): string {
-    return (this.name || this.ident);
   }
 
   // return value of given child
@@ -99,29 +108,29 @@ export class DocDecl {
     return this.uident;
   }
 
-  // // whether this decl can by found by link resolving
-  // private canBeFound(): boolean {
-  //   switch (this.kind) {
-  //     case 'doc':
-  //     case 'module':
-  //     case 'index':
-  //     case 'class':
-  //     case 'interface':
-  //     case 'function':
-  //     case 'const':
-  //     case 'global':
-  //     case 'method':
-  //     case 'property':
-  //     case 'ctor':
-  //     case 'classfunction':
-  //     case 'classconst':
-  //     case 'classglobal':
-  //     case 'field':
-  //     case 'enum_element':
-  //       return true;
-  //   }
-  //   return false;
-  // }
+  // whether this decl can by found by link resolving
+  private canBeFound(): boolean {
+    switch (this.kind) {
+      case 'doc':
+      case 'module':
+      case 'index':
+      case 'class':
+      case 'interface':
+      case 'function':
+      case 'const':
+      case 'global':
+      case 'method':
+      case 'property':
+      case 'ctor':
+      case 'classfunction':
+      case 'classconst':
+      case 'classglobal':
+      case 'field':
+      case 'enum_element':
+        return true;
+    }
+    return false;
+  }
 
   //zdoc Find (child) decl by ident
   public find(ident: string): DocDecl|null {
@@ -137,7 +146,7 @@ export class DocDecl {
     // return decl.findFromHere(ident);
     for (const uid in DocDecl.byUid) {
       const d = DocDecl.byUid[uid];
-      if (d.ident == ident) {
+      if (d.canBeFound() && d.ident == ident) {
         return d;
       }
     }

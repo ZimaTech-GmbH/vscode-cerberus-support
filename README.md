@@ -1,4 +1,19 @@
 this file was auto-generated with `zdoccer.sh`
+# Index
+[VS Code extension for Cerberus X](#vs-code-extension-for-cerberus-x)  
+&emsp;[Involved Parties](#involved-parties)  
+&emsp;[License](#license)  
+&emsp;[Testing the extension](#testing-the-extension)  
+&emsp;[Code Scaffolding](#code-scaffolding)  
+&emsp;[Documentation](#documentation)  
+&emsp;[Architecture Documentation](#architecture-documentation)  
+&emsp;[Feature Documentation](#feature-documentation)  
+&emsp;&emsp;[src/extension.ts](#srcextensionts)  
+&emsp;&emsp;[src/features/configuration.ts](#srcfeaturesconfigurationts)  
+&emsp;&emsp;[src/features/declHtmlTransformer.ts](#srcfeaturesdeclhtmltransformerts)  
+&emsp;&emsp;[src/features/DocDecl.ts](#srcfeaturesdocdeclts)  
+&emsp;&emsp;[src/features/documentation.ts](#srcfeaturesdocumentationts)  
+&emsp;&emsp;[src/features/documentSymbolProvider.ts](#srcfeaturesdocumentsymbolproviderts)  
 # VS Code extension for Cerberus X #
 
 `VS Code extension for Cerberus X` enables programming Cerberus X in Visual Studio Code. The goal of this extension is to provide basic and more sophisticated features necessary and useful for working with Cerberus X.
@@ -29,6 +44,7 @@ To keep the project folder tidy, we use the following structure:
 
 ```
 src/              # entry point (extension.ts)
+  assets/         # assets (to be compiled into the extension)
   features/       # features
   test/           # test suite
 syntaxes/         # Cerberus X syntax definition
@@ -95,12 +111,50 @@ Set Cerberus X configuration value at *section*
 
 ---
 
+### src/features/declHtmlTransformer.ts ###
+
+---
+`export class CxDeclHtmlTransformer`
+
+Transformer for DocDecl -> HTML
+
+---
+`  public static setWebview(webview: vscode.Webview)`
+
+Set valid Webview for URI resolving
+
+---
+`  public static transform(decl: DocDecl): string`
+
+Transform given DocDecl to string of HTML (full page)
+
+---
+
+### src/features/DocDecl.ts ###
+
+---
+`export class DocDecl`
+
+Any kind of Cerberus X declaration
+
+---
+`  public static getByUid(uid: string): DocDecl|null`
+
+Get DocDecl by uid (must match exactly, always 6 digits)
+
+---
+`  public find(ident: string): DocDecl|null`
+
+Find (child) decl by ident
+
+---
+
 ### src/features/documentation.ts ###
 
 ---
 `export class CxDocumentation`
 
-Global Cerberus X documentation declarations
+Global Cerberus X documentation
 
 ---
 `  public static rootDecl: DocDecl`
