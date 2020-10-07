@@ -15,9 +15,9 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
 
   //zdoc Builds the tree. Invoked automatically by VS Code.
   public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[] {
+    this.clearPreprocessorStack();
     // prepare root (file) symbol
     const fileName: string = (document.fileName.match(/[^\\\/]*$/) || ["untitled"])[0];
-    console.log('providing document symbols for', fileName);
     const fileRange: vscode.Range = new vscode.Range(0,0, 0,0).with(
       undefined, document.lineAt(document.lineCount-1).range.end
     )
@@ -47,18 +47,20 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
       // ignore comment lines
       if (text.startsWith("'")) continue;
       // preprocessor directives:
+      // end of block comment
+      if (text.match(/^#end\b/i)) {
+        this.exitPreprocessorBlock();
+        continue;
+      }
+      // everything else is ignored in block comments
+      if (this.isInCommentBlock()) continue;
       // conditional block
       if (text.match(/^#if\b/i)) {
         this.enterPreprocessorBlock(PreprocessorBlock.Conditional);
       // comment block
       } else if (text.match(/^#rem\b/i)) {
         this.enterPreprocessorBlock(PreprocessorBlock.Comment);
-      // end of block
-      } else if (text.match(/^#end\b/i)) {
-        this.exitPreprocessorBlock();
       }
-      // ignore block comments
-      if (this.isInCommentBlock()) continue;
 
       // single blocky declarations (1 keyword, 1 declaration)
       let matches = text.match(/^(class|interface|function|method)\s+(([a-zA-Z_][a-zA-Z0-9_]*)[^']*)/i);
@@ -270,11 +272,13 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
         }
       }
     }
-
     return [fileSymbol];
   }
 
   // preprocessor-stack helpers
+  private clearPreprocessorStack() {
+    this.preprocessorStack = [];
+  }
   private enterPreprocessorBlock(kind: number) {
     this.preprocessorStack.unshift(kind);
   }

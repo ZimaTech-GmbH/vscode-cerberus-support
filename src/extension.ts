@@ -59,6 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
           const transccPath: string = CxConfiguration.get('transccPath');
           const srcPath = vscode.window.activeTextEditor.document.uri.fsPath;
 
+          outputChannel.show();
           outputChannel.appendLine('Building HTML');
           outputChannel.appendLine('transcc path: ' + transccPath);
           outputChannel.appendLine('source file: ' + srcPath);
@@ -93,6 +94,7 @@ export function activate(context: vscode.ExtensionContext) {
             'build' + CxConfiguration.version + '/html5/CerberusGame.html'
           );
 
+          outputChannel.show();
           outputChannel.appendLine('Running HTML');
           outputChannel.appendLine('cserver path: ' + cserverPath);
           outputChannel.appendLine('game file: ' + outPath);
