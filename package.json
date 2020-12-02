@@ -2,7 +2,7 @@
 	"name": "cerberus-x",
 	"displayName": "Cerberus X",
 	"description": "Support for the language Cerberus X",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
@@ -36,11 +36,6 @@
 			}
 		],
 		"commands": [
-			{
-				"category": "Cerberus X",
-				"title": "Hello World",
-				"command": "cerberus-x.helloWorld"
-			},
 			{
 				"category": "Cerberus X",
 				"title": "Show Cerberus X Documentation",

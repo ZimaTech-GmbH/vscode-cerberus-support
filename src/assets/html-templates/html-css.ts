@@ -121,7 +121,7 @@ a[name] {
   width: 100%;
   height: 2em;
   background: var(--vscode-settings-textInputBackground);
-  border: none;
+  border: 0.2px solid var(--vscode-settings-textInputForeground);
   border-radius: 2em;
   color: var(--vscode-settings-textInputForeground);
 }
@@ -140,13 +140,14 @@ a[name] {
 }
 #browser #addressbar .location {
   position: absolute;
-  top: 0;
+  top: 0.1em;
   left: 0;
   margin: 0 1em;
   max-width: calc(100% - 2em);
-  height: 2em;
+  padding-right: 0.1em;
+  height: 1.8em;
   overflow: hidden;
-  line-height: 2em;
+  line-height: 1.8em;
   background: var(--vscode-settings-textInputBackground);
   color: var(--vscode-settings-textInputForeground);
 }
