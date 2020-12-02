@@ -3,6 +3,7 @@
 	"displayName": "Cerberus X",
 	"description": "Support for the language Cerberus X",
 	"version": "0.1.0",
+	"publisher": "ZimaTechGmbH",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
