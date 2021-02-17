@@ -18,6 +18,15 @@ From within VS Code, just hit `F5` to start a testing instance with `VS Code ext
 
 Automatic testing is not yet set up.
 
+## Building the extension ##
+
+Run
+```
+vsce package
+```
+
+Needs `vsce` (see https://code.visualstudio.com/api/working-with-extensions/publishing-extension )
+
 ## Code Scaffolding ##
 
 This extension was initialised with `Yeoman` and `VS Code Extension Generator`.

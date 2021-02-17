@@ -4,6 +4,7 @@ this file was auto-generated with `zdoccer.sh`
 &emsp;[Involved Parties](#involved-parties)  
 &emsp;[License](#license)  
 &emsp;[Testing the extension](#testing-the-extension)  
+&emsp;[Building the extension](#building-the-extension)  
 &emsp;[Code Scaffolding](#code-scaffolding)  
 &emsp;[Documentation](#documentation)  
 &emsp;[Architecture Documentation](#architecture-documentation)  
@@ -33,6 +34,15 @@ See `LICENSE.md`
 From within VS Code, just hit `F5` to start a testing instance with `VS Code extension for Cerberus X` loaded. Then load any `.cxs` file to activate the extension.
 
 Automatic testing is not yet set up.
+
+## Building the extension ##
+
+Run
+```
+vsce package
+```
+
+Needs `vsce` (see https://code.visualstudio.com/api/working-with-extensions/publishing-extension )
 
 ## Code Scaffolding ##
 

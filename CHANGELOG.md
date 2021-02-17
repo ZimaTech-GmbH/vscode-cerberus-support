@@ -5,6 +5,14 @@ All notable changes to `VS Code extension for Cerberus X` will be documented in 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.1
+
+### Fixed
+- Syntax highlighting for precompiler directives
+
+### Changed
+- `Run as HTML5` now also builds
+
 ## [Unreleased]
 
 ### Added

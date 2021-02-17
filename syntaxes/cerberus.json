@@ -239,7 +239,7 @@
 				},
 				{
 					"name": "meta.preprocessor.cxs",
-					"match": "(?i)^\\s*#[^\\n]*\\b"
+					"match": "(?i)^\\s*#[\\w]*"
 				}
 			]
 		}

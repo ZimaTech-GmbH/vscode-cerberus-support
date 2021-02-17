@@ -53,30 +53,12 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'cerberus-x.buildHtml',
-      () => {
-        if (vscode.window.activeTextEditor?.document) {
-          const transccPath: string = CxConfiguration.get('transccPath');
-          const srcPath = vscode.window.activeTextEditor.document.uri.fsPath;
-
-          outputChannel.show();
-          outputChannel.appendLine('Building HTML');
-          outputChannel.appendLine('transcc path: ' + transccPath);
-          outputChannel.appendLine('source file: ' + srcPath);
-
-          const args: string[] = ['-target="Html5_Game"', srcPath]
-
-          const proc = childProcess.spawn(transccPath, args);
-          proc.stdout.on('data', (data) => {
-            outputChannel.appendLine(data.toString());
-          });
-          proc.stderr.on('data', (data) => {
-            outputChannel.appendLine(data.toString());
-          });
-          proc.on('exit', (code) => {
-            outputChannel.appendLine('Process terminated.')
-            if (code) outputChannel.appendLine('Exit code: '+code);
-          });
+      'cerberus-x.buildHtml', () => {
+        const file = cerberusGetBuildFile();
+        if (file) {
+          cerberusBuild(file, outputChannel);
+        } else {
+          outputChannel.appendLine('No file in editor selected for build');
         }
       }
     )
@@ -86,32 +68,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'cerberus-x.runHtml',
       () => {
-        if (vscode.window.activeTextEditor?.document) {
-          const cserverPath: string = CxConfiguration.get('cserverPath');
-          const srcPath = vscode.window.activeTextEditor.document.uri.fsPath;
-
-          let outPath = srcPath.replace(/cxs$/,
-            'build' + CxConfiguration.version + '/html5/CerberusGame.html'
-          );
-
-          outputChannel.show();
-          outputChannel.appendLine('Running HTML');
-          outputChannel.appendLine('cserver path: ' + cserverPath);
-          outputChannel.appendLine('game file: ' + outPath);
-
-          const args: string[] = [outPath];
-
-          const proc = childProcess.spawn(cserverPath, args);
-          proc.stdout.on('data', (data) => {
-            outputChannel.appendLine(data.toString());
+        const file = cerberusGetBuildFile();
+        if (file) {
+          cerberusBuild(file, outputChannel).then(() => {
+            cerberusRunHtml5(file, outputChannel)
           });
-          proc.stderr.on('data', (data) => {
-            outputChannel.appendLine(data.toString());
-          });
-          proc.on('exit', (code) => {
-            outputChannel.appendLine('Process terminated.')
-            if (code) outputChannel.appendLine('Exit code: '+code);
-          });
+        } else {
+          outputChannel.appendLine('No file in editor selected for build');
         }
       }
     )
@@ -127,3 +90,68 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+// returns currently active build file or empty string if not defined
+function cerberusGetBuildFile(): string {
+  if (vscode.window.activeTextEditor?.document) {
+    return vscode.window.activeTextEditor.document.uri.fsPath;
+  }
+  return "";
+}
+
+// builds cerberus file, returns promise resolving on build complete
+function cerberusBuild(file: string, outputChannel: vscode.OutputChannel): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const transccPath: string = CxConfiguration.get('transccPath');
+    const srcPath = file;
+
+    outputChannel.show();
+    outputChannel.appendLine('Building HTML');
+    outputChannel.appendLine('transcc path: ' + transccPath);
+    outputChannel.appendLine('source file: ' + srcPath);
+
+    const args: string[] = ['-target="Html5_Game"', srcPath]
+
+    const proc = childProcess.spawn(transccPath, args);
+    proc.stdout.on('data', (data) => {
+      outputChannel.appendLine(data.toString());
+    });
+    proc.stderr.on('data', (data) => {
+      outputChannel.appendLine(data.toString());
+    });
+    proc.on('exit', (code) => {
+      outputChannel.appendLine('Process terminated.')
+      if (code) outputChannel.appendLine('Exit code: '+code);
+      resolve();
+    });
+  });
+}
+
+// runs cerberus file, built as HTML5
+function cerberusRunHtml5(file: string, outputChannel: vscode.OutputChannel) {
+  const cserverPath: string = CxConfiguration.get('cserverPath');
+  const srcPath = file;
+
+  let outPath = srcPath.replace(/cxs$/,
+    'build' + CxConfiguration.version + '/html5/CerberusGame.html'
+  );
+
+  outputChannel.show();
+  outputChannel.appendLine('Running HTML');
+  outputChannel.appendLine('cserver path: ' + cserverPath);
+  outputChannel.appendLine('game file: ' + outPath);
+
+  const args: string[] = [outPath];
+
+  const proc = childProcess.spawn(cserverPath, args);
+  proc.stdout.on('data', (data) => {
+    outputChannel.appendLine(data.toString());
+  });
+  proc.stderr.on('data', (data) => {
+    outputChannel.appendLine(data.toString());
+  });
+  proc.on('exit', (code) => {
+    outputChannel.appendLine('Process terminated.')
+    if (code) outputChannel.appendLine('Exit code: '+code);
+  });
+}
