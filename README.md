@@ -22,8 +22,13 @@ This file was auto-generated with `zdoccer.js` 1.3.0
     - [`class CxChildProcess`](#class-cxchildprocess)
       - [`public static spawn(title: string, paths: {[name: string]: string}, command: string, args: string[] = []): Promise<void>`](#public-static-spawn-title-string-paths-name-string-string-command-string-args-string-promise-void)
     - [`class CxConfiguration`](#class-cxconfiguration)
+      - [`public static version: string|undefined`](#public-static-version-string-undefined)
+      - [`public static platform: string|undefined`](#public-static-platform-string-undefined)
+      - [`public static transccPath: string|undefined`](#public-static-transccpath-string-undefined)
+      - [`public static makedocsPath: string|undefined`](#public-static-makedocspath-string-undefined)
+      - [`public static cserverPath: string|undefined`](#public-static-cserverpath-string-undefined)
       - [`public static get(section: string): any`](#public-static-get-section-string-any)
-      - [`public static set(section: string, value: any): Thenable<void>`](#public-static-set-section-string-value-any-thenable-void)
+      - [`public static set(section: string, value: any, target: vscode.ConfigurationTarget = vscode.ConfigurationTarget.Workspace): Thenable<void>`](#public-static-set-section-string-value-any-target-vscode-configurationtarget-vscode-configurationtarget-workspace-thenable-void)
       - [`public static onConfigurationValid(callback: ()=>void): void`](#public-static-onconfigurationvalid-callback-void-void)
     - [`class DocDeclHtmlTransformer`](#class-docdeclhtmltransformer)
       - [`public static setWebview(webview: vscode.Webview)`](#public-static-setwebview-webview-vscode-webview)
@@ -279,6 +284,36 @@ Spawns a new child process and outputs stdout and stderr data
 Provides and checks configuration for Cerberus X
 
 
+<div id="public-static-version-string-undefined"></div><!-- alias: version -->
+
+### `public static version: string|undefined`
+
+Cerberus X version
+
+<div id="public-static-platform-string-undefined"></div><!-- alias: platform -->
+
+### `public static platform: string|undefined`
+
+platform (`winnt`, `macos` or `linux`)
+
+<div id="public-static-transccpath-string-undefined"></div><!-- alias: transccpath -->
+
+### `public static transccPath: string|undefined`
+
+path to transcc executable
+
+<div id="public-static-makedocspath-string-undefined"></div><!-- alias: makedocspath -->
+
+### `public static makedocsPath: string|undefined`
+
+path to makedocs executable
+
+<div id="public-static-cserverpath-string-undefined"></div><!-- alias: cserverpath -->
+
+### `public static cserverPath: string|undefined`
+
+path to cserver executable
+
 <div id="public-static-get-section-string-any"></div><!-- alias: get -->
 
 ### `public static get(section: string): any`
@@ -289,9 +324,9 @@ Returns Cerberus X configuration value from `section`
 - *returns* &mdash; matching value
 
 
-<div id="public-static-set-section-string-value-any-thenable-void"></div><!-- alias: set -->
+<div id="public-static-set-section-string-value-any-target-vscode-configurationtarget-vscode-configurationtarget-workspace-thenable-void"></div><!-- alias: set -->
 
-### `public static set(section: string, value: any): Thenable<void>`
+### `public static set(section: string, value: any, target: vscode.ConfigurationTarget = vscode.ConfigurationTarget.Workspace): Thenable<void>`
 
 
 Sets a Cerberus X configuration value.

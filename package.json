@@ -72,15 +72,10 @@
 					"default": "",
 					"description": "Path to your Cerberus X installation."
 				},
-				"cerberusX.transccPath": {
+				"cerberusX.buildFile": {
 					"type": "string",
 					"default": "",
-					"description": "Path to transcc executable."
-				},
-				"cerberusX.cserverPath": {
-					"type": "string",
-					"default": "",
-					"description": "Path to cserver executable."
+					"description": "Entry point file for your project."
 				}
 			}
 		}
