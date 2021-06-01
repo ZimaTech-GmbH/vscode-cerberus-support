@@ -3,11 +3,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as childProcess from 'child_process';
 
-import { CxDocumentSymbolProvider } from './features/documentSymbolProvider';
-import { CxConfiguration } from './features/configuration';
-import { CxDocumentation } from './features/documentation';
+import { CxExtension } from './extension/cerberusx.extension';
 
 /*zdoc
 This function is called when the extension is activated.
@@ -17,141 +14,8 @@ activate the extension.
 Checks the Cerberus X configuration and registers all handlers and providers.
 zdoc*/
 export function activate(context: vscode.ExtensionContext) {
-
-  // register functions to be called once configuration is valid
-  CxConfiguration.onConfigurationValid(() => {
-    CxDocumentation.loadDecls();
-  });
-
-  // check if Cerberus X configuration is valid
-  CxConfiguration.validate();
-
-  vscode.workspace.onDidChangeConfiguration((event) => {
-    CxConfiguration.validate();
-  });
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('cerberus-x.helloWorld', () => {
-    // The code you place here will be executed every time your command is executed
-
-    // Display a message box to the user
-    vscode.window.showInformationMessage('Hello World from Cerberus X Support!');
-  });
-
-  context.subscriptions.push(disposable);
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'cerberus-x.showDocumentation',
-      () => {CxDocumentation.show()}
-    )
-  );
-
-  let outputChannel = vscode.window.createOutputChannel('transcc');
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'cerberus-x.buildHtml', () => {
-        const file = cerberusGetBuildFile();
-        if (file) {
-          cerberusBuild(file, outputChannel);
-        } else {
-          outputChannel.appendLine('No file in editor selected for build');
-        }
-      }
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'cerberus-x.runHtml',
-      () => {
-        const file = cerberusGetBuildFile();
-        if (file) {
-          cerberusBuild(file, outputChannel).then(() => {
-            cerberusRunHtml5(file, outputChannel)
-          });
-        } else {
-          outputChannel.appendLine('No file in editor selected for build');
-        }
-      }
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.languages.registerDocumentSymbolProvider(
-      { scheme: 'file', language: 'cerberus-x' },
-      new CxDocumentSymbolProvider()
-    )
-  );
+  CxExtension.activate(context);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
-
-// returns currently active build file or empty string if not defined
-function cerberusGetBuildFile(): string {
-  if (vscode.window.activeTextEditor?.document) {
-    return vscode.window.activeTextEditor.document.uri.fsPath;
-  }
-  return "";
-}
-
-// builds cerberus file, returns promise resolving on build complete
-function cerberusBuild(file: string, outputChannel: vscode.OutputChannel): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const transccPath: string = CxConfiguration.get('transccPath');
-    const srcPath = file;
-
-    outputChannel.show();
-    outputChannel.appendLine('Building HTML');
-    outputChannel.appendLine('transcc path: ' + transccPath);
-    outputChannel.appendLine('source file: ' + srcPath);
-
-    const args: string[] = ['-target="Html5_Game"', srcPath]
-
-    const proc = childProcess.spawn(transccPath, args);
-    proc.stdout.on('data', (data) => {
-      outputChannel.appendLine(data.toString());
-    });
-    proc.stderr.on('data', (data) => {
-      outputChannel.appendLine(data.toString());
-    });
-    proc.on('exit', (code) => {
-      outputChannel.appendLine('Process terminated.')
-      if (code) outputChannel.appendLine('Exit code: '+code);
-      resolve();
-    });
-  });
-}
-
-// runs cerberus file, built as HTML5
-function cerberusRunHtml5(file: string, outputChannel: vscode.OutputChannel) {
-  const cserverPath: string = CxConfiguration.get('cserverPath');
-  const srcPath = file;
-
-  let outPath = srcPath.replace(/cxs$/,
-    'build' + CxConfiguration.version + '/html5/CerberusGame.html'
-  );
-
-  outputChannel.show();
-  outputChannel.appendLine('Running HTML');
-  outputChannel.appendLine('cserver path: ' + cserverPath);
-  outputChannel.appendLine('game file: ' + outPath);
-
-  const args: string[] = [outPath];
-
-  const proc = childProcess.spawn(cserverPath, args);
-  proc.stdout.on('data', (data) => {
-    outputChannel.appendLine(data.toString());
-  });
-  proc.stderr.on('data', (data) => {
-    outputChannel.appendLine(data.toString());
-  });
-  proc.on('exit', (code) => {
-    outputChannel.appendLine('Process terminated.')
-    if (code) outputChannel.appendLine('Exit code: '+code);
-  });
-}

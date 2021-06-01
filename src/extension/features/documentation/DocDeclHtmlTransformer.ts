@@ -2,20 +2,20 @@
 
 import * as vscode from 'vscode';
 
-import { CxConfiguration } from './configuration';
+import { CxConfiguration } from '../configuration/configuration.feature';
 import { DocDecl } from './DocDecl';
 
-import templateCss from '../assets/html-templates/html-css';
-import templateJs from '../assets/html-templates/html-js';
-import iconCerberus from '../assets/html-templates/svg-cerberus';
-import iconNavBack from '../assets/html-templates/svg-nav-back';
-import iconNavFwd from '../assets/html-templates/svg-nav-fwd';
-import iconNavSearch from '../assets/html-templates/svg-nav-search';
+import templateCss from '../../../assets/html-templates/html-css';
+import templateJs from '../../../assets/html-templates/html-js';
+import iconCerberus from '../../../assets/html-templates/svg-cerberus';
+import iconNavBack from '../../../assets/html-templates/svg-nav-back';
+import iconNavFwd from '../../../assets/html-templates/svg-nav-fwd';
+import iconNavSearch from '../../../assets/html-templates/svg-nav-search';
 
 /*zdoc
 Transformer for DocDecl -> HTML
 zdoc*/
-export class CxDeclHtmlTransformer {
+export class DocDeclHtmlTransformer {
   public static webview: vscode.Webview;
 
   //zdoc Set valid Webview for URI resolving

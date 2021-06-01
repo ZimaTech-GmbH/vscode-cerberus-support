@@ -3,9 +3,9 @@
 import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 
+import { CxConfiguration } from '../configuration/configuration.feature';
 import { DocDecl } from './DocDecl';
-import { CxConfiguration } from './configuration';
-import { CxDeclHtmlTransformer } from './declHtmlTransformer';
+import { DocDeclHtmlTransformer } from './DocDeclHtmlTransformer';
 
 /*zdoc
 Global Cerberus X documentation
@@ -39,8 +39,8 @@ export class CxDocumentation {
     // populate web view
     this.webview = panel.webview;
     // initialize transformer and get html for current decl
-    CxDeclHtmlTransformer.setWebview(this.webview);
-    this.webview.html = CxDeclHtmlTransformer.transform(this.currentDecl);
+    DocDeclHtmlTransformer.setWebview(this.webview);
+    this.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
 
     // simple navigation
     panel.webview.onDidReceiveMessage(
@@ -50,13 +50,13 @@ export class CxDocumentation {
           case 'navigateById':
             this.currentDecl = DocDecl.getByUid(message.text) || this.rootDecl;
             vscode.window.showInformationMessage('by id '+message.text);
-            panel.webview.html = CxDeclHtmlTransformer.transform(this.currentDecl);
+            panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate to ident
           case 'navigate':
             this.currentDecl = this.currentDecl.find(message.text) || this.rootDecl;
             vscode.window.showInformationMessage('by ident '+message.text);
-            panel.webview.html = CxDeclHtmlTransformer.transform(this.currentDecl);
+            panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // search
           case 'search':
@@ -94,7 +94,12 @@ export class CxDocumentation {
         }
       },
       (err) => {
-        vscode.window.showErrorMessage(err.message, 'Rebuild Help');
+        const rebuildHelp = 'Rebuild Help';
+        vscode.window.showErrorMessage(err.message, rebuildHelp).then((selected) => {
+          if (selected == rebuildHelp) {
+            
+          }
+        });
       }
     );
   }
