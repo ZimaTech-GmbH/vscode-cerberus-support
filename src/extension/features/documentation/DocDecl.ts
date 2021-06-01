@@ -1,7 +1,7 @@
 //zdoc ### src/features/DocDecl.ts ###
 
 // dictionary to replace any default value based on decl.kind
-import * as kdict from './documentationKindDictionary.json';
+import * as kdict from './docdecl-kind-dictionary.json';
 // Cast to any because I know what I'm doing.
 const kindDictionary = kdict as any;
 

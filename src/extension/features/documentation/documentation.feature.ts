@@ -4,8 +4,9 @@ import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 
 import { CxConfiguration } from '../configuration/configuration.feature';
-import { DocDecl } from './DocDecl';
-import { DocDeclHtmlTransformer } from './DocDeclHtmlTransformer';
+import { DocDecl } from './docdecl';
+import { DocDeclHtmlTransformer } from './docdecl-html-transformer';
+import { CxChildProcess } from '../child-process/child-process.feature';
 
 /*zdoc
 Global Cerberus X documentation
@@ -17,6 +18,15 @@ export class CxDocumentation {
   private static currentDecl: DocDecl;
   // webview (instance needed for navigating and stuff)
   private static webview: vscode.Webview;
+
+  public static build(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const makedocsPath = CxConfiguration.get('path') + '/bin/makedocs_winnt.exe';
+      const title = 'Building documentation';
+      const paths = {'makedocs': makedocsPath};
+      return CxChildProcess.spawn(title, paths, makedocsPath);
+    });
+  }
 
   //zdoc Register feature and prepare components
   public static show(): void {
@@ -97,7 +107,7 @@ export class CxDocumentation {
         const rebuildHelp = 'Rebuild Help';
         vscode.window.showErrorMessage(err.message, rebuildHelp).then((selected) => {
           if (selected == rebuildHelp) {
-            
+            this.build().then(() => {this.loadDecls()});
           }
         });
       }

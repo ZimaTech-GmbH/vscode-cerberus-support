@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 
-import { CxDocumentSymbolProvider } from './documentSymbolProvider';
 import { CxBuilder } from './features/builder/builder.feature';
 import { CxConfiguration } from './features/configuration/configuration.feature';
 import { CxDocumentation } from './features/documentation/documentation.feature';
+import { CxTaskProvider } from './providers/task.provider';
+import { CxDocumentSymbolProvider } from './providers/document-symbol.provider';
 
 /**
  * Extension container
@@ -37,6 +38,10 @@ export class CxExtension {
       )
     );
 
+    // this.context.subscriptions.push(
+    //   vscode.tasks.registerTaskProvider('makedocs', new CxTaskProvider())
+    // )
+
     // done setting up, start working by validating current configuration
     CxConfiguration.validate();
   }
@@ -46,6 +51,12 @@ export class CxExtension {
       vscode.commands.registerCommand(
         'cerberus-x.helloWorld',
         () => vscode.window.showInformationMessage('Hello World from Cerberus X Support!')
+      )
+    );
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand(
+        'cerberus-x.buildDocumentation',
+        () => CxDocumentation.build()
       )
     );
     this.context.subscriptions.push(

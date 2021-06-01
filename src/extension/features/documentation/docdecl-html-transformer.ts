@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 
 import { CxConfiguration } from '../configuration/configuration.feature';
-import { DocDecl } from './DocDecl';
+import { DocDecl } from './docdecl';
 
 import templateCss from '../../../assets/html-templates/html-css';
 import templateJs from '../../../assets/html-templates/html-js';

@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import * as childProcess from 'child_process';
 
 import { CxExtension } from '../../cerberusx.extension';
 import { CxConfiguration } from '../configuration/configuration.feature';
+import { CxChildProcess } from '../child-process/child-process.feature';
 
 export class CxBuilder {
 
@@ -25,29 +25,11 @@ export class CxBuilder {
   }
   
   public static build(file: string, args: string[]): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const transccPath: string = CxConfiguration.get('transccPath');
-      CxExtension.output.show();
-      CxExtension.output.appendLine('Building: ' + file);
-      CxExtension.output.appendLine('transcc path: ' + transccPath);
-
-      args = [...args, file];
-
-      const process = childProcess.spawn(transccPath, args);
-      process.stdout.on('data', (data) => {
-        CxExtension.output.appendLine(data.toString());
-      });
-      process.stderr.on('data', (data) => {
-        CxExtension.output.appendLine(data.toString());
-      });
-      process.on('exit', (code) => {
-        CxExtension.output.appendLine('Process terminated.')
-        if (code) {
-          CxExtension.output.appendLine('Exit code: ' + code);
-        }
-        resolve();
-      });
-    });
+    const title = 'Building: ' + file;
+    const transccPath: string = CxConfiguration.get('transccPath');
+    const paths = {'transcc': transccPath};
+    args = [...args, file];
+    return CxChildProcess.spawn(title, paths, transccPath, args);
   }
 
   public static runHtml(): Promise<void> {
@@ -58,25 +40,10 @@ export class CxBuilder {
         const gamePath = file.replace(/cxs$/,
           'build' + CxConfiguration.version + '/html5/CerberusGame.html'
         );
-        CxExtension.output.show();
-        CxExtension.output.appendLine('Running: ' + gamePath);
-        CxExtension.output.appendLine('cserver path: ' + cserverPath);
-
+        const title = 'Running: ' + gamePath;
+        const paths = {'cserver': cserverPath};
         const args: string[] = [gamePath];
-
-        const process = childProcess.spawn(cserverPath, args);
-        process.stdout.on('data', (data) => {
-          CxExtension.output.appendLine(data.toString());
-        });
-        process.stderr.on('data', (data) => {
-          CxExtension.output.appendLine(data.toString());
-        });
-        process.on('exit', (code) => {
-          CxExtension.output.appendLine('Process terminated.')
-          if (code) {
-            CxExtension.output.appendLine('Exit code: ' + code);
-          }
-        });
+        return CxChildProcess.spawn(title, paths, cserverPath, args)
       });
     } else {
       CxExtension.output.appendLine('No file in editor selected for build');

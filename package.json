@@ -39,6 +39,11 @@
 		"commands": [
 			{
 				"category": "Cerberus X",
+				"title": "Rebuild documentation",
+				"command": "cerberus-x.buildDocumentation"
+			},
+			{
+				"category": "Cerberus X",
 				"title": "Show Cerberus X Documentation",
 				"command": "cerberus-x.showDocumentation"
 			},
@@ -51,6 +56,12 @@
 				"category": "Cerberus X",
 				"title": "Run as HTML5 application",
 				"command": "cerberus-x.runHtml"
+			}
+		],
+		"taskDefinitions": [
+			{
+				"type": "makedocs",
+				"properties": {}
 			}
 		],
 		"configuration": {
