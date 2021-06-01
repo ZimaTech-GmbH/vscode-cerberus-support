@@ -2,6 +2,9 @@
 import * as childProcess from 'child_process';
 import { CxExtension } from '../../cerberusx.extension';
 
+/**
+ * Child process helper
+ */
 export class CxChildProcess {
   /**
    * Spawns a new child process and outputs stdout and stderr data

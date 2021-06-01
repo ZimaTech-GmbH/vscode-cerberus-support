@@ -16,6 +16,10 @@ export class CxExtension {
 
   constructor() { }
 
+  /**
+   * Checks the Cerberus X configuration and registers all handlers and providers.
+   * @param context hosting `vscode.ExtensionContext`
+   */
   public static activate(context: vscode.ExtensionContext) {
     this.context = context;
     this.output = vscode.window.createOutputChannel('Cerberus X');
@@ -78,6 +82,4 @@ export class CxExtension {
       )
     );
   }
-
-
 }

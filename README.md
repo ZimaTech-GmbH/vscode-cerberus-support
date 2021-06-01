@@ -1,41 +1,85 @@
-this file was auto-generated with `zdoccer.sh`
+This file was auto-generated with `zdoccer.js` 1.3.0
+
 # Index
-[VS Code extension for Cerberus X](#vs-code-extension-for-cerberus-x)  
-&emsp;[Involved Parties](#involved-parties)  
-&emsp;[License](#license)  
-&emsp;[Testing the extension](#testing-the-extension)  
-&emsp;[Building the extension](#building-the-extension)  
-&emsp;[Code Scaffolding](#code-scaffolding)  
-&emsp;[Documentation](#documentation)  
-&emsp;[Architecture Documentation](#architecture-documentation)  
-&emsp;[Feature Documentation](#feature-documentation)  
-&emsp;&emsp;[src/extension.ts](#srcextensionts)  
-&emsp;&emsp;[src/features/configuration.ts](#srcfeaturesconfigurationts)  
-&emsp;&emsp;[src/features/declHtmlTransformer.ts](#srcfeaturesdeclhtmltransformerts)  
-&emsp;&emsp;[src/features/DocDecl.ts](#srcfeaturesdocdeclts)  
-&emsp;&emsp;[src/features/documentation.ts](#srcfeaturesdocumentationts)  
-&emsp;&emsp;[src/features/documentSymbolProvider.ts](#srcfeaturesdocumentsymbolproviderts)  
-# VS Code extension for Cerberus X #
+
+  - [VS Code extension for Cerberus X](#vs-code-extension-for-cerberus-x)
+    - [Involved Parties](#involved-parties)
+    - [License](#license)
+    - [Testing the extension](#testing-the-extension)
+    - [Building the extension](#building-the-extension)
+    - [Code Scaffolding](#code-scaffolding)
+    - [Documentation](#documentation)
+  - [Sourcecode Documentation](#sourcecode-documentation)
+    - [`function activate(context: vscode.ExtensionContext)`](#function-activate-context-vscode-extensioncontext)
+    - [`function deactivate() {}`](#function-deactivate)
+    - [`class CxExtension`](#class-cxextension)
+      - [`public static activate(context: vscode.ExtensionContext)`](#public-static-activate-context-vscode-extensioncontext)
+    - [`class CxBuilder`](#class-cxbuilder)
+      - [`public static cerberusGetBuildFile(): string`](#public-static-cerberusgetbuildfile-string)
+      - [`public static buildHtml(): Promise<void>`](#public-static-buildhtml-promise-void)
+      - [`public static build(file: string, args: string[]): Promise<void>`](#public-static-build-file-string-args-string-promise-void)
+      - [`public static runHtml(): Promise<void>`](#public-static-runhtml-promise-void)
+    - [`class CxChildProcess`](#class-cxchildprocess)
+      - [`public static spawn(title: string, paths: {[name: string]: string}, command: string, args: string[] = []): Promise<void>`](#public-static-spawn-title-string-paths-name-string-string-command-string-args-string-promise-void)
+    - [`class CxConfiguration`](#class-cxconfiguration)
+      - [`public static get(section: string): any`](#public-static-get-section-string-any)
+      - [`public static set(section: string, value: any): Thenable<void>`](#public-static-set-section-string-value-any-thenable-void)
+      - [`public static onConfigurationValid(callback: ()=>void): void`](#public-static-onconfigurationvalid-callback-void-void)
+    - [`class DocDeclHtmlTransformer`](#class-docdeclhtmltransformer)
+      - [`public static setWebview(webview: vscode.Webview)`](#public-static-setwebview-webview-vscode-webview)
+      - [`public static transform(decl: DocDecl): string`](#public-static-transform-decl-docdecl-string)
+    - [`class DocDecl`](#class-docdecl)
+      - [`public static getByUid(uid: string): DocDecl|null`](#public-static-getbyuid-uid-string-docdecl-null)
+      - [`public getTextOfChild(kind: string): string`](#public-gettextofchild-kind-string-string)
+      - [`public getDocPath(): string`](#public-getdocpath-string)
+      - [`public getUident(): string`](#public-getuident-string)
+      - [`public find(ident: string): DocDecl|null`](#public-find-ident-string-docdecl-null)
+    - [`class CxDocumentation`](#class-cxdocumentation)
+      - [`public static rootDecl: DocDecl`](#public-static-rootdecl-docdecl)
+      - [`private static currentDecl: DocDecl`](#private-static-currentdecl-docdecl)
+      - [`private static webview: vscode.Webview`](#private-static-webview-vscode-webview)
+      - [`public static build(): Promise<void>`](#public-static-build-promise-void)
+      - [`public static show(): void`](#public-static-show-void)
+      - [`public static loadDecls()`](#public-static-loaddecls)
+    - [`class CxDocumentSymbolProvider`](#class-cxdocumentsymbolprovider)
+      - [`public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[]`](#public-providedocumentsymbols-document-vscode-textdocument-token-vscode-cancellationtoken-vscode-documentsymbol)
+
+
+---
+
+*original Markdown from src/.readme.md*
+
+<div id="vs-code-extension-for-cerberus-x"></div><!-- alias: vs-code-extension-for-cerberus-x -->
+
+# VS Code extension for Cerberus X
 
 `VS Code extension for Cerberus X` enables programming Cerberus X in Visual Studio Code. The goal of this extension is to provide basic and more sophisticated features necessary and useful for working with Cerberus X.
 
-## Involved Parties ##
+<div id="involved-parties"></div><!-- alias: involved-parties -->
+
+## Involved Parties
 
 `VS Code extension for Cerberus X` was created by Olivier Stuker inspired by Adamredwoods' `Visual Studio Code extension for Cerberus Programming Language` and Hezkore's `BlitzMax Language Basics for Visual Studio Code`.
 
 POC: [Olivier "Holzchopf" Stuker](https://cerberus-x.com/community/members/holzchopf.49/)
 
-## License ##
+<div id="license"></div><!-- alias: license -->
+
+## License
 
 See `LICENSE.md`
 
-## Testing the extension ##
+<div id="testing-the-extension"></div><!-- alias: testing-the-extension -->
+
+## Testing the extension
 
 From within VS Code, just hit `F5` to start a testing instance with `VS Code extension for Cerberus X` loaded. Then load any `.cxs` file to activate the extension.
 
 Automatic testing is not yet set up.
 
-## Building the extension ##
+<div id="building-the-extension"></div><!-- alias: building-the-extension -->
+
+## Building the extension
 
 Run
 ```
@@ -44,7 +88,9 @@ vsce package
 
 Needs `vsce` (see https://code.visualstudio.com/api/working-with-extensions/publishing-extension )
 
-## Code Scaffolding ##
+<div id="code-scaffolding"></div><!-- alias: code-scaffolding -->
+
+## Code Scaffolding
 
 This extension was initialised with `Yeoman` and `VS Code Extension Generator`.
 
@@ -55,143 +101,389 @@ To keep the project folder tidy, we use the following structure:
 ```
 src/              # entry point (extension.ts)
   assets/         # assets (to be compiled into the extension)
-  features/       # features
+  extension/      # extension source
+    features/     # features (everything that can be seen as a module)
+    providers/    # providers
   test/           # test suite
 syntaxes/         # Cerberus X syntax definition
 ```
 
-## Documentation ##
+<div id="documentation"></div><!-- alias: documentation -->
 
-This project is documented using `zdoccer.sh` - a script that creates the `README.md` from a `README.preamble.md`, the documented source in the `src` folder and a `README.termination.md`.
+## Documentation
 
-To document any feature of your project, precede it with a block comment of the following form:
+This project is documented using `zdoccer.js` - a script that creates the `README.md` from markdown files and Javadoc-documented source in the specified folder.
+
+To document any feature of your project, preceed it with a block comment of the following form:
 ```
-/*zdoc
-markdown for your feature goes here
-zdoc*/
+/**
+ * markdown for your feature goes here
+ */
 <line of code to be documented>
 ```
 
 Or a single line comment of the following form:
 ```
-//zdoc markdown goes here
+/** markdown goes here */
 <line of code to be documented>
 ```
 
 If `<line of code to be documented>` is not empty, it will be prepended to the markdown block.
 
-To update the `README.md`, run the `zdoccer.sh` script.
+To update the `README.md`, run the `zdoccer.js` script:
+```
+node zdoccer.js src
+```
 
-## Architecture Documentation ##
+<div id="sourcecode-documentation"></div><!-- alias: sourcecode-documentation -->
+
+# Sourcecode Documentation
 
 `VS Code extension for Cerberus X` is split into multiple singleton classes, grouping similar functionalities or features of same context.
 
-## Feature Documentation ##
----
-
-### src/extension.ts ###
 
 ---
-`export function activate(context: vscode.ExtensionContext)`
+
+*transformed Javadoc from src/extension.ts*
+
+<div id="function-activate-context-vscode-extensioncontext"></div><!-- alias: activate -->
+
+## `function activate(context: vscode.ExtensionContext)`
+
 
 This function is called when the extension is activated.
 See `package.json > "activationEvents"` for the definition of events that
 activate the extension.
 
+Starts the extension, see [CxExtension **&#x1f875;**](#class-cxextension)
+
+
+<div id="function-deactivate"></div><!-- alias: deactivate -->
+
+## `function deactivate() {}`
+
+
+this method is called when your extension is deactivated
+
+
+
+
+---
+
+*transformed Javadoc from src/extension/cerberusx.extension.ts*
+
+<div id="class-cxextension"></div><!-- alias: cxextension -->
+
+## `class CxExtension`
+
+
+Extension container
+
+
+<div id="public-static-activate-context-vscode-extensioncontext"></div><!-- alias: activate -->
+
+### `public static activate(context: vscode.ExtensionContext)`
+
+
 Checks the Cerberus X configuration and registers all handlers and providers.
+- *param* `context` &mdash; hosting `vscode.ExtensionContext`
+
+
+
 
 ---
 
-### src/features/configuration.ts ###
+*transformed Javadoc from src/extension/features/builder/builder.feature.ts*
+
+<div id="class-cxbuilder"></div><!-- alias: cxbuilder -->
+
+## `class CxBuilder`
+
+
+Different Cerberus X builders
+
+
+<div id="public-static-cerberusgetbuildfile-string"></div><!-- alias: cerberusgetbuildfile -->
+
+### `public static cerberusGetBuildFile(): string`
+
+returns currently active build file or empty string if not defined
+
+<div id="public-static-buildhtml-promise-void"></div><!-- alias: buildhtml -->
+
+### `public static buildHtml(): Promise<void>`
+
+
+Builds HTML5 game
+- *returns* &mdash; Promise resolving on success
+
+
+<div id="public-static-build-file-string-args-string-promise-void"></div><!-- alias: build -->
+
+### `public static build(file: string, args: string[]): Promise<void>`
+
+
+Generic build, invokes `transcc`
+- *param* `file` &mdash; path to file to build
+- *param* `args` &mdash; compiler flags
+- *returns* &mdash; Promise resolving on success
+
+
+<div id="public-static-runhtml-promise-void"></div><!-- alias: runhtml -->
+
+### `public static runHtml(): Promise<void>`
+
+
+Runs HTML5 game
+- *returns* &mdash; Promise resolving on success
+
+
+
 
 ---
-`export class CxConfiguration`
+
+*transformed Javadoc from src/extension/features/child-process/child-process.feature.ts*
+
+<div id="class-cxchildprocess"></div><!-- alias: cxchildprocess -->
+
+## `class CxChildProcess`
+
+
+Child process helper
+
+
+<div id="public-static-spawn-title-string-paths-name-string-string-command-string-args-string-promise-void"></div><!-- alias: spawn -->
+
+### `public static spawn(title: string, paths: {[name: string]: string}, command: string, args: string[] = []): Promise<void>`
+
+
+Spawns a new child process and outputs stdout and stderr data
+- *param* `title` &mdash; How the process is described in output
+- *param* `paths` &mdash; Paths to list, e.g. {transcc: 'path/there'}
+- *param* `command` &mdash; command to execute
+- *param* `args` &mdash; command arguments
+- *returns* &mdash; a promise resolving when the process finished
+
+
+
+
+---
+
+*transformed Javadoc from src/extension/features/configuration/configuration.feature.ts*
+
+<div id="class-cxconfiguration"></div><!-- alias: cxconfiguration -->
+
+## `class CxConfiguration`
+
 
 Provides and checks configuration for Cerberus X
 
+
+<div id="public-static-get-section-string-any"></div><!-- alias: get -->
+
+### `public static get(section: string): any`
+
+
+Returns Cerberus X configuration value from `section`
+- *param* `section` &mdash; key
+- *returns* &mdash; matching value
+
+
+<div id="public-static-set-section-string-value-any-thenable-void"></div><!-- alias: set -->
+
+### `public static set(section: string, value: any): Thenable<void>`
+
+
+Sets a Cerberus X configuration value.
+Use `undefined` to unset.
+- *param* `section` &mdash; key
+- *param* `value` &mdash; value
+- *returns* &mdash; `Thenable<void>` resolving when done
+
+
+<div id="public-static-onconfigurationvalid-callback-void-void"></div><!-- alias: onconfigurationvalid -->
+
+### `public static onConfigurationValid(callback: ()=>void): void`
+
+
+Defines functions to be called when configuration is valid
+- *param* `callback` &mdash; function to be called
+
+
+
+
 ---
-`  public static get(section: string): any`
 
-Get Cerberus X configuration value from *section*
+*transformed Javadoc from src/extension/features/documentation/docdecl-html-transformer.ts*
+
+<div id="class-docdeclhtmltransformer"></div><!-- alias: docdeclhtmltransformer -->
+
+## `class DocDeclHtmlTransformer`
+
+
+Transformer for [DocDecl **&#x1f875;**](#class-docdecl) -> HTML
+
+
+<div id="public-static-setwebview-webview-vscode-webview"></div><!-- alias: setwebview -->
+
+### `public static setWebview(webview: vscode.Webview)`
+
+
+Sets Webview, necessary for URI resolving
+- *param* `webview` &mdash; valid `vscode.Webview`
+
+
+<div id="public-static-transform-decl-docdecl-string"></div><!-- alias: transform -->
+
+### `public static transform(decl: DocDecl): string`
+
+
+Transforms given [DocDecl **&#x1f875;**](#class-docdecl) to string of HTML (full page)
+- *param* `decl` &mdash; `DocDecl` to transform
+- *returns* &mdash; html string
+
+
+
 
 ---
-`  public static set(section: string, value: any): Thenable<void>`
 
-Set Cerberus X configuration value at *section*
+*transformed Javadoc from src/extension/features/documentation/docdecl.ts*
 
----
+<div id="class-docdecl"></div><!-- alias: docdecl -->
 
-### src/features/declHtmlTransformer.ts ###
+## `class DocDecl`
 
----
-`export class CxDeclHtmlTransformer`
-
-Transformer for DocDecl -> HTML
-
----
-`  public static setWebview(webview: vscode.Webview)`
-
-Set valid Webview for URI resolving
-
----
-`  public static transform(decl: DocDecl): string`
-
-Transform given DocDecl to string of HTML (full page)
-
----
-
-### src/features/DocDecl.ts ###
-
----
-`export class DocDecl`
 
 Any kind of Cerberus X declaration
 
+
+<div id="public-static-getbyuid-uid-string-docdecl-null"></div><!-- alias: getbyuid -->
+
+### `public static getByUid(uid: string): DocDecl|null`
+
+
+Returns DocDecl by uid (must match exactly, always 6 digits)
+- *param* `uid` &mdash; 6 digit uid
+- *returns* &mdash; matching `DocDecl` or `null`
+
+
+<div id="public-gettextofchild-kind-string-string"></div><!-- alias: gettextofchild -->
+
+### `public getTextOfChild(kind: string): string`
+
+
+Returns value of child of given `kind`
+- *param* `kind` &mdash; `kind` property that has to match
+- *returns* &mdash; string value of match
+
+
+<div id="public-getdocpath-string"></div><!-- alias: getdocpath -->
+
+### `public getDocPath(): string`
+
+
+Absolute doc path for this decl
+- *returns* &mdash; doc path as string
+
+
+<div id="public-getuident-string"></div><!-- alias: getuident -->
+
+### `public getUident(): string`
+
+
+full path (uident) for this decl (and cache, speeds things up)
+- *returns* &mdash; full path as string
+
+
+<div id="public-find-ident-string-docdecl-null"></div><!-- alias: find -->
+
+### `public find(ident: string): DocDecl|null`
+
+
+Find child decl by ident
+- *param* `ident` &mdash; identifier to match
+- *returns* &mdash; matching `DocDecl` or `null`
+
+
+
+
 ---
-`  public static getByUid(uid: string): DocDecl|null`
 
-Get DocDecl by uid (must match exactly, always 6 digits)
+*transformed Javadoc from src/extension/features/documentation/documentation.feature.ts*
 
----
-`  public find(ident: string): DocDecl|null`
+<div id="class-cxdocumentation"></div><!-- alias: cxdocumentation -->
 
-Find (child) decl by ident
+## `class CxDocumentation`
 
----
 
-### src/features/documentation.ts ###
+Cerberus X in-editor documentation
 
----
-`export class CxDocumentation`
 
-Global Cerberus X documentation
+<div id="public-static-rootdecl-docdecl"></div><!-- alias: rootdecl -->
 
----
-`  public static rootDecl: DocDecl`
+### `public static rootDecl: DocDecl`
 
 Root DocDecl
 
+<div id="private-static-currentdecl-docdecl"></div><!-- alias: currentdecl -->
+
+### `private static currentDecl: DocDecl`
+
+currently (navigated to) DocDecl
+
+<div id="private-static-webview-vscode-webview"></div><!-- alias: webview -->
+
+### `private static webview: vscode.Webview`
+
+webview (instance needed for navigating and stuff)
+
+<div id="public-static-build-promise-void"></div><!-- alias: build -->
+
+### `public static build(): Promise<void>`
+
+
+Invokes makedocs to build the docs
+- *returns* &mdash; Promise resolving when done
+
+
+<div id="public-static-show-void"></div><!-- alias: show -->
+
+### `public static show(): void`
+
+
+Registers the feature and prepares components
+
+
+<div id="public-static-loaddecls"></div><!-- alias: loaddecls -->
+
+### `public static loadDecls()`
+
+
+Loads declarations from `docs/html/decls.json`
+
+
+
+
 ---
-`  public static show(): void`
 
-Register feature and prepare components
+*transformed Javadoc from src/extension/providers/document-symbol.provider.ts*
 
----
-`  public static loadDecls()`
+<div id="class-cxdocumentsymbolprovider"></div><!-- alias: cxdocumentsymbolprovider -->
 
-Load declarations from docs/html/decls.json
+## `class CxDocumentSymbolProvider`
 
----
-
-### src/features/documentSymbolProvider.ts ###
-
----
-`export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider`
 
 Provides a `vscode.DocumentSymbol` tree for the outline
 
----
-`  public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[]`
 
-Builds the tree. Invoked automatically by VS Code.
+<div id="public-providedocumentsymbols-document-vscode-textdocument-token-vscode-cancellationtoken-vscode-documentsymbol"></div><!-- alias: providedocumentsymbols -->
+
+### `public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[]`
+
+
+Builds the tree. Invoked automatically by VS Code
+- *param* `document` &mdash; `vscode.TextDocument` to build the tree for
+- *param* `token` &mdash; `vscode.CancellationToken`
+- *returns* &mdash; `vscode.DocumentSymbol[]`
+
 

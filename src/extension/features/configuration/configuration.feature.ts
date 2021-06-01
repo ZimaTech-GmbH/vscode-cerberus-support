@@ -1,26 +1,37 @@
-//zdoc ### src/features/configuration.ts ###
-
 import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 
-/*zdoc
-Provides and checks configuration for Cerberus X
-zdoc*/
+/**
+ * Provides and checks configuration for Cerberus X
+ */
 export class CxConfiguration {
-  private static onConfigurationValidCallbacks: any[] = [];
+  private static onConfigurationValidCallbacks: (()=>void)[] = [];
   public static version: string = '';
 
-  //zdoc Get Cerberus X configuration value from *section*
+  /**
+   * Returns Cerberus X configuration value from `section`
+   * @param section key
+   * @returns matching value
+   */
   public static get(section: string): any {
     return vscode.workspace.getConfiguration('cerberusX').get(section);
   }
-  //zdoc Set Cerberus X configuration value at *section*
+  /**
+   * Sets a Cerberus X configuration value.
+   * Use `undefined` to unset.
+   * @param section key
+   * @param value value
+   * @returns `Thenable<void>` resolving when done
+   */
   public static set(section: string, value: any): Thenable<void> {
     return vscode.workspace.getConfiguration('cerberusX').update(section, value, true);
   }
 
-  // define functions to be called when configuration is valid
-  public static onConfigurationValid(callback: any): void {
+  /**
+   * Defines functions to be called when configuration is valid
+   * @param callback function to be called
+   */
+  public static onConfigurationValid(callback: ()=>void): void {
     this.onConfigurationValidCallbacks.push(callback);
   }
 

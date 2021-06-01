@@ -4,6 +4,9 @@ import { CxExtension } from '../../cerberusx.extension';
 import { CxConfiguration } from '../configuration/configuration.feature';
 import { CxChildProcess } from '../child-process/child-process.feature';
 
+/**
+ * Different Cerberus X builders
+ */
 export class CxBuilder {
 
   /** returns currently active build file or empty string if not defined */
@@ -14,6 +17,10 @@ export class CxBuilder {
     return "";
   }
 
+  /**
+   * Builds HTML5 game
+   * @returns Promise resolving on success
+   */
   public static buildHtml(): Promise<void> {
     const file = this.cerberusGetBuildFile();
     if (file) {
@@ -24,6 +31,12 @@ export class CxBuilder {
     }
   }
   
+  /**
+   * Generic build, invokes `transcc`
+   * @param file path to file to build
+   * @param args compiler flags
+   * @returns Promise resolving on success
+   */
   public static build(file: string, args: string[]): Promise<void> {
     const title = 'Building: ' + file;
     const transccPath: string = CxConfiguration.get('transccPath');
@@ -32,6 +45,10 @@ export class CxBuilder {
     return CxChildProcess.spawn(title, paths, transccPath, args);
   }
 
+  /**
+   * Runs HTML5 game
+   * @returns Promise resolving on success
+   */
   public static runHtml(): Promise<void> {
     const file = this.cerberusGetBuildFile();
     if (file) {

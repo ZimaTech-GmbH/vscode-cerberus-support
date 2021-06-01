@@ -1,5 +1,3 @@
-//zdoc ### src/features/declHtmlTransformer.ts ###
-
 import * as vscode from 'vscode';
 
 import { CxConfiguration } from '../configuration/configuration.feature';
@@ -12,18 +10,25 @@ import iconNavBack from '../../../assets/html-templates/svg-nav-back';
 import iconNavFwd from '../../../assets/html-templates/svg-nav-fwd';
 import iconNavSearch from '../../../assets/html-templates/svg-nav-search';
 
-/*zdoc
-Transformer for DocDecl -> HTML
-zdoc*/
+/**
+ * Transformer for [[DocDecl]] -> HTML
+ */
 export class DocDeclHtmlTransformer {
   public static webview: vscode.Webview;
 
-  //zdoc Set valid Webview for URI resolving
+  /**
+   * Sets Webview, necessary for URI resolving
+   * @param webview valid `vscode.Webview`
+   */
   public static setWebview(webview: vscode.Webview) {
     this.webview = webview;
   }
 
-  //zdoc Transform given DocDecl to string of HTML (full page)
+  /**
+   * Transforms given [[DocDecl]] to string of HTML (full page)
+   * @param decl `DocDecl` to transform
+   * @returns html string
+   */
   public static transform(decl: DocDecl): string {
     // no decl? no contents!
     if (!decl) {

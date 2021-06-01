@@ -1,5 +1,3 @@
-//zdoc ### src/features/documentation.ts ###
-
 import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 
@@ -8,17 +6,21 @@ import { DocDecl } from './docdecl';
 import { DocDeclHtmlTransformer } from './docdecl-html-transformer';
 import { CxChildProcess } from '../child-process/child-process.feature';
 
-/*zdoc
-Global Cerberus X documentation
-zdoc*/
+/**
+ * Cerberus X in-editor documentation
+ */
 export class CxDocumentation {
-  //zdoc Root DocDecl
+  /** Root DocDecl */
   public static rootDecl: DocDecl;
-  // currently (navigated to) DocDecl
+  /** currently (navigated to) DocDecl */
   private static currentDecl: DocDecl;
-  // webview (instance needed for navigating and stuff)
+  /** webview (instance needed for navigating and stuff) */
   private static webview: vscode.Webview;
 
+  /**
+   * Invokes makedocs to build the docs
+   * @returns Promise resolving when done
+   */
   public static build(): Promise<void> {
     return new Promise((resolve, reject) => {
       const makedocsPath = CxConfiguration.get('path') + '/bin/makedocs_winnt.exe';
@@ -28,7 +30,9 @@ export class CxDocumentation {
     });
   }
 
-  //zdoc Register feature and prepare components
+  /**
+   * Registers the feature and prepares components
+   */
   public static show(): void {
     // create web panel
     let panel = vscode.window.createWebviewPanel(
@@ -79,7 +83,9 @@ export class CxDocumentation {
     );
   }
 
-  //zdoc Load declarations from docs/html/decls.json
+  /**
+   * Loads declarations from `docs/html/decls.json`
+   */
   public static loadDecls() {
     // path to decls.json
     const uri = vscode.Uri.file(CxConfiguration.get('path') + '/docs/html/decls.json');

@@ -1,13 +1,11 @@
-//zdoc ### src/features/DocDecl.ts ###
-
 // dictionary to replace any default value based on decl.kind
 import * as kdict from './docdecl-kind-dictionary.json';
 // Cast to any because I know what I'm doing.
 const kindDictionary = kdict as any;
 
-/*zdoc
-Any kind of Cerberus X declaration
-zdoc*/
+/**
+ * Any kind of Cerberus X declaration
+ */
 export class DocDecl {
   ident: string = '';
   kind: string = '';
@@ -69,12 +67,20 @@ export class DocDecl {
     DocDecl.byUid[this.uid] = this;
   }
 
-  //zdoc Get DocDecl by uid (must match exactly, always 6 digits)
+  /**
+   * Returns DocDecl by uid (must match exactly, always 6 digits)
+   * @param uid 6 digit uid
+   * @returns matching `DocDecl` or `null`
+   */
   public static getByUid(uid: string): DocDecl|null {
     return this.byUid[uid];
   }
 
-  // return value of given child
+  /**
+   * Returns value of child of given `kind`
+   * @param kind `kind` property that has to match
+   * @returns string value of match
+   */
   public getTextOfChild(kind: string): string {
     if (this.childs) {
       for (const c of this.childs) {
@@ -86,7 +92,10 @@ export class DocDecl {
     return '';
   }
 
-  // return absolute doc path for this decl
+  /**
+   * Absolute doc path for this decl
+   * @returns doc path as string
+   */
   public getDocPath(): string {
     if (this.kind == 'doc' || this.kind == 'index') {
       return '/' + this.getUident();
@@ -97,7 +106,10 @@ export class DocDecl {
     }
   }
 
-  // return full path (uident) for this decl (and cache, speeds things up)
+  /**
+   * full path (uident) for this decl (and cache, speeds things up)
+   * @returns full path as string
+   */
   public getUident(): string {
     if (this.uident) {
       return this.uident;
@@ -132,7 +144,11 @@ export class DocDecl {
     return false;
   }
 
-  //zdoc Find (child) decl by ident
+  /**
+   * Find child decl by ident
+   * @param ident identifier to match
+   * @returns matching `DocDecl` or `null`
+   */
   public find(ident: string): DocDecl|null {
     // let decl: DocDecl = this;
     // // absolute path?
