@@ -5,6 +5,7 @@ import { CxConfiguration } from './features/configuration/configuration.feature'
 import { CxDocumentation } from './features/documentation/documentation.feature';
 import { CxTaskProvider } from './providers/task.provider';
 import { CxDocumentSymbolProvider } from './providers/document-symbol.provider';
+import { CxOnTypeFormattingEditProvider } from './providers/on-type-formatting-edit.provider';
 
 /**
  * Extension container
@@ -42,6 +43,8 @@ export class CxExtension {
       )
     );
 
+    CxOnTypeFormattingEditProvider.init(this.context);
+    
     // this.context.subscriptions.push(
     //   vscode.tasks.registerTaskProvider('makedocs', new CxTaskProvider())
     // )

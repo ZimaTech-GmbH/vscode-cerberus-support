@@ -48,6 +48,9 @@ This file was auto-generated with `zdoccer.js` 1.3.0
       - [`public static loadDecls()`](#public-static-loaddecls)
     - [`class CxDocumentSymbolProvider`](#class-cxdocumentsymbolprovider)
       - [`public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[]`](#public-providedocumentsymbols-document-vscode-textdocument-token-vscode-cancellationtoken-vscode-documentsymbol)
+    - [`class CxOnTypeFormattingEditProvider`](#class-cxontypeformattingeditprovider)
+      - [`public static init(context: vscode.ExtensionContext)`](#public-static-init-context-vscode-extensioncontext)
+      - [`public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]>`](#public-provideontypeformattingedits-document-vscode-textdocument-position-vscode-position-char-string-options-vscode-formattingoptions-token-vscode-cancellationtoken-vscode-providerresult-vscode-textedit)
 
 
 ---
@@ -520,5 +523,42 @@ Builds the tree. Invoked automatically by VS Code
 - *param* `document` &mdash; `vscode.TextDocument` to build the tree for
 - *param* `token` &mdash; `vscode.CancellationToken`
 - *returns* &mdash; `vscode.DocumentSymbol[]`
+
+
+
+
+---
+
+*transformed Javadoc from src/extension/providers/on-type-formatting-edit.provider.ts*
+
+<div id="class-cxontypeformattingeditprovider"></div><!-- alias: cxontypeformattingeditprovider -->
+
+## `class CxOnTypeFormattingEditProvider`
+
+
+Provides a `vscode.OnTypeFormattingEditProvider` for real-time formatting
+
+
+<div id="public-static-init-context-vscode-extensioncontext"></div><!-- alias: init -->
+
+### `public static init(context: vscode.ExtensionContext)`
+
+
+Initializes provider
+- *param* `context` &mdash; `vscode.ExtensionContext`
+
+
+<div id="public-provideontypeformattingedits-document-vscode-textdocument-position-vscode-position-char-string-options-vscode-formattingoptions-token-vscode-cancellationtoken-vscode-providerresult-vscode-textedit"></div><!-- alias: provideontypeformattingedits -->
+
+### `public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]>`
+
+
+Provides on type formatting edits. Invoked automatically by VS Code
+- *param* `document` &mdash; current `vscode.TextDocument`
+- *param* `position` &mdash; `vscode.Position` after triggering
+- *param* `char` &mdash; triggering char as `string`
+- *param* `options` &mdash; `vscode.FormattingOptions`
+- *param* `token` &mdash; `vscode.CancellationToken`
+- *returns* &mdash; `vscode.TextEdit`s to apply
 
 
