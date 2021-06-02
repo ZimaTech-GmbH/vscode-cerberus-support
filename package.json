@@ -78,7 +78,10 @@
 			{
 				"command": "cerberus-x.showDocumentation",
 				"key": "f1",
-				"when": "editorLangId == cerberus-x"
+				"when": "editorLangId == cerberus-x",
+				"args": {
+					"autolocate": "curpos"
+				}
 			}
 		],
 		"configuration": {

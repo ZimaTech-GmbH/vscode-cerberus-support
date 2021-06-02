@@ -33,7 +33,7 @@ export class CxDocumentation {
   /**
    * Registers the feature and prepares components
    */
-  public static show(): void {
+  public static show(args: any = undefined): void {
     // create web panel
     let panel = vscode.window.createWebviewPanel(
       'cerberus-x.documentation',
@@ -52,6 +52,20 @@ export class CxDocumentation {
     )
     // populate web view
     this.webview = panel.webview;
+
+    // start decl given?
+    if (args?.autolocate == 'curpos') {
+      const editor = vscode.window.activeTextEditor;
+      if (editor?.selection.isEmpty) {
+        // the Position object gives you the line and character where the cursor is
+        const position = editor.selection.active;
+        const range = editor.document.getWordRangeAtPosition(position);
+        const word = editor.document.getText(range);
+        console.log(word);
+        // TODO: find by ident
+      }
+    }
+
     // initialize transformer and get html for current decl
     DocDeclHtmlTransformer.setWebview(this.webview);
     this.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);

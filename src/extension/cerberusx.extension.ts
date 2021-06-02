@@ -69,7 +69,7 @@ export class CxExtension {
     this.context.subscriptions.push(
       vscode.commands.registerCommand(
         'cerberus-x.showDocumentation',
-        () => CxDocumentation.show()
+        (args) => CxDocumentation.show(args)
       )
     );
     this.context.subscriptions.push(
