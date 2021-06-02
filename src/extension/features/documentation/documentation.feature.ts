@@ -23,10 +23,12 @@ export class CxDocumentation {
    */
   public static build(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const makedocsPath = CxConfiguration.get('path') + '/bin/makedocs_winnt.exe';
-      const title = 'Building documentation';
-      const paths = {'makedocs': makedocsPath};
-      return CxChildProcess.spawn(title, paths, makedocsPath);
+      const makedocsPath = CxConfiguration.makedocsPath;
+      if (makedocsPath) {
+        const title = 'Building documentation';
+        const paths = {'makedocs': makedocsPath};
+        return CxChildProcess.spawn(title, paths, makedocsPath);
+      }
     });
   }
 
