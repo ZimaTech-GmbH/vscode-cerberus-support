@@ -64,6 +64,23 @@
 				"properties": {}
 			}
 		],
+		"keybindings": [
+			{
+				"command": "cerberus-x.runHtml",
+				"key": "f5",
+				"when": "resourceLangId == cerberus-x"
+			},
+			{
+				"command": "cerberus-x.buildHtml",
+				"key": "f6",
+				"when": "resourceLangId == cerberus-x"
+			},
+			{
+				"command": "cerberus-x.showDocumentation",
+				"key": "f1",
+				"when": "editorLangId == cerberus-x"
+			}
+		],
 		"configuration": {
 			"title": "Cerberus X",
 			"properties": {
