@@ -39,64 +39,72 @@ export class CxDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     return [this.fileSymbol];
   }
 
-  private symboliseChilds(semant: CxLangSemant) {
-    if (semant.childs) {
-      for (const s of semant.childs) {
-        if (s.type == CxLangSemantType.ClassDecl && s.childs && s.token) {
-          // classes always go to file symbol
-          this.scopeStack = this.scopeStack.slice(-1);
-          let kind = vscode.SymbolKind.Class;
-          let ident = s.childs[0]?.token?.text || '';
-          this.scopeStack.unshift(this.appendSymbol2(ident, '', kind, s.token));
+  private symboliseChilds(semants: CxLangSemant[]) {
+    for (const s of semants) {
+      if (s.type == CxLangSemantType.ClassDecl && s.childs) {
+        // classes always go to file symbol
+        this.scopeStack = this.scopeStack.slice(-1);
+        let kind = vscode.SymbolKind.Class;
+        let ident = s.getIdentifier();
+        this.scopeStack.unshift(this.appendSymbol2(ident, '', kind, s.childs[0].token));
+      }
+      else if (s.type == CxLangSemantType.FunctionDecl && s.childs) {
+        let kind = vscode.SymbolKind.Function;
+        if (s.token.is('method')) {
+          kind = vscode.SymbolKind.Method;
         }
-        else if (s.type == CxLangSemantType.FunctionDecl && s.childs && s.token) {
-          let kind = vscode.SymbolKind.Function;
-          if (s.token.is('method')) {
-            kind = vscode.SymbolKind.Method;
+        let ident = s.getIdentifier();
+        this.scopeStack.unshift(this.appendSymbol2(ident, s.getDetailsText(), kind, s.childs[0].token));
+        // also: parameters
+        s.childs.forEach((c) => {
+          if (c.type == CxLangSemantType.ParamDecl) {
+            c.childs?.forEach((cc) => {
+              let kind = vscode.SymbolKind.Variable;
+              let ident = cc.getIdentifier();
+              this.appendSymbol2(ident || 'NA', cc.getDetailsText(), kind, cc.token);
+            });
           }
-          let ident = s.childs[0]?.token?.text || '';
-          this.scopeStack.unshift(this.appendSymbol2(ident, '', kind, s.token));
+        })
+      }
+      else if (s.type == CxLangSemantType.StorageDecl && s.childs) {
+        let kind = vscode.SymbolKind.Variable;
+        if (s.token.is('const')) {
+          kind = vscode.SymbolKind.Constant;
         }
-        else if (s.type == CxLangSemantType.StorageDecl && s.childs && s.token) {
-          let kind = vscode.SymbolKind.Variable;
-          if (s.token.is('const')) {
-            kind = vscode.SymbolKind.Constant;
-          }
+        for (const k of s.childs) {
+          let ident = k.getIdentifier();
+          this.appendSymbol2(ident || 'NA', k.getDetailsText(), kind, k.token);
+        }
+      }
+      else if (s.type == CxLangSemantType.EnumDecl && s.childs) {
+        // find common prefix
+        let commonName = '';
+        if (s.childs && s.childs[0]) {
+          commonName = s.childs[0].getIdentifier();
           for (const k of s.childs) {
-            let ident = k.childs ? k.childs[0].token?.text : undefined;
-            this.appendSymbol2(ident || 'NA', '', kind, s.token);
+            let ident = k.getIdentifier();
+            commonName = this.getCommonBeginning(commonName, ident);
+          }
+          if (commonName) {
+            commonName += "*"
+          } else {
+            commonName = "(no common prefix)"
           }
         }
-        else if (s.type == CxLangSemantType.EnumDecl && s.childs && s.token) {
-          // find common prefix
-          let commonName = '';
-          if (s.childs && s.childs[0] && s.childs[0].childs) {
-            commonName = s.childs[0]?.childs[0].token?.text || '';
-            for (const k of s.childs.slice(2, -1)) {
-              let ident = k.childs ? k.childs[0].token?.text : undefined;
-              commonName = this.getCommonBeginning(commonName, ident || '');
-            }
-            if (commonName) {
-              commonName += "*"
-            } else {
-              commonName = "(no common prefix)"
-            }
-          }
-          this.scopeStack.unshift(this.appendSymbol2(commonName, '', vscode.SymbolKind.Enum, s.token));
-          let kind = vscode.SymbolKind.EnumMember;
-          for (const k of s.childs) {
-            let ident = k.childs ? k.childs[0].token?.text : undefined;
-            this.appendSymbol2(ident || 'NA', '', kind, s.token);
-          }
-          this.scopeStack.shift();
+        this.scopeStack.unshift(this.appendSymbol2(commonName, '', vscode.SymbolKind.Enum, s.token));
+        let kind = vscode.SymbolKind.EnumMember;
+        for (const k of s.childs) {
+          let ident = k.getIdentifier();
+          this.appendSymbol2(ident || 'NA', k.getDetailsText(), kind, k.token);
         }
-        else if (s.type == CxLangSemantType.Scope && s.token) {
-          let kind = vscode.SymbolKind.Namespace;
-          this.scopeStack.unshift(this.appendSymbol2(s.token.text, '', kind, s.token));
-        }
-        else if (s.type == CxLangSemantType.EndScope && s.token) {
-          this.scopeStack.shift();
-        }
+        this.scopeStack.shift();
+      }
+      else if (s.type == CxLangSemantType.Scope) {
+        let kind = vscode.SymbolKind.Namespace;
+        this.scopeStack.unshift(this.appendSymbol2(s.token.text, '', kind, s.token));
+      }
+      else if (s.type == CxLangSemantType.EndScope) {
+        this.scopeStack.shift();
       }
     }
   }

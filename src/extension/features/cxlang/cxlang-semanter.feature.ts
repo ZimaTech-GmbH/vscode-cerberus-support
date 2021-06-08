@@ -8,7 +8,7 @@ export class CxLangSemanter {
   private static tokenIndex: number = 0;
   private static token: CxLangToken|null = null;
 
-  public static semant(tokenized: CxLangTokenizedDocument): CxLangSemant {
+  public static semant(tokenized: CxLangTokenizedDocument): CxLangSemant[] {
     console.log('semanting');
     let start = Date.now();
 
@@ -22,31 +22,34 @@ export class CxLangSemanter {
     this.tokenIndex = -1;
     this.token = null;
 
-    const doc = new CxLangSemant(CxLangSemantType.Document, undefined);
+    const semants: CxLangSemant[] = [];
+    // const doc = new CxLangSemant(CxLangSemantType.Document, undefined);
 
     let token: CxLangToken|null;
     while (token = this.nextRelevantToken(true)) {
       let semant: CxLangSemant|null;
       // console.log(token?.text);
       if (semant = this.currentStorageDecl()) {
-        doc.appendChild(semant);
+        // doc.appendChild(semant);
+        semants.push(semant);
       }
       else if (semant = this.currentFunctionDecl()) {
-        doc.appendChild(semant);
+        // doc.appendChild(semant);
+        semants.push(semant);
       }
       else if (semant = this.currentClassDecl()) {
-        doc.appendChild(semant);
-      }
-      else if (semant = this.currentEnumDecl()) {
-        doc.appendChild(semant);
+        // doc.appendChild(semant);
+        semants.push(semant);
       }
       else if (token.isIn(['if', 'select', 'while', 'repeat', 'for'])) {
-        doc.appendChild(
+        // doc.appendChild(
+        semants.push(
           new CxLangSemant(CxLangSemantType.Scope, token)
         );
       }
       else if (token.isIn(['end', 'endif', 'wend', 'forever', 'until', 'next'])) {
-        doc.appendChild(
+        // doc.appendChild(
+        semants.push(
           new CxLangSemant(CxLangSemantType.EndScope, token)
         );
       }
@@ -64,8 +67,8 @@ export class CxLangSemanter {
     //   // console.log(oline);
     // }
 
-    console.log(doc);
-    return doc;
+    // console.log(doc);
+    return semants;
 
   }
 
@@ -132,46 +135,20 @@ export class CxLangSemanter {
     return null;
   }
 
-  // storage declaration; `global`|`local`|`field`|`const` variable [, variable..]
+  // storage declaration; `enumerate`|`global`|`local`|`field`|`const` variable [, variable..]
   private static currentStorageDecl(): CxLangSemant|null {
     const token = this.token;
-    if (token?.isIn(['global','local','field','const'])) {
-      // this.nextRelevantToken();
-      let decls: CxLangSemant[]|undefined;
+    const storageDecl = token?.isIn(['global','local','field','const']);
+    const enumDecl = token?.is('enumerate');
+    if (token && (storageDecl || enumDecl)) {
+      const type = storageDecl ? CxLangSemantType.StorageDecl : CxLangSemantType.EnumDecl;
+      const childs: (CxLangSemant|null)[] = [];
       let ntoken: CxLangToken|null = null;
       do {
         ntoken = this.nextRelevantToken(ntoken != null);
-        const decl = this.currentVarDecl();
-        if (decl) {
-          if (!decls) decls = [];
-          decls.push(decl);
-        }
+        childs.push(this.currentVarDecl());
       } while (this.token?.is(','))
-      if (decls) {
-        this.nextRelevantToken();
-        return new CxLangSemant(CxLangSemantType.StorageDecl, token, decls);
-      }
-    }
-    return null;
-  }
-
-  private static currentEnumDecl(): CxLangSemant|null {
-    const token = this.token;
-    if (token?.is('enumerate')) {
-      let decls: CxLangSemant[]|undefined;
-      let ntoken: CxLangToken|null = null;
-      do {
-        ntoken = this.nextRelevantToken(ntoken != null);
-        const decl = this.currentVarDecl();
-        if (decl) {
-          if (!decls) decls = [];
-          decls.push(decl);
-        }
-      } while (this.token?.is(','))
-      if (decls) {
-        this.nextRelevantToken();
-        return new CxLangSemant(CxLangSemantType.EnumDecl, token, decls);
-      }
+      return new CxLangSemant(type, token, childs);
     }
     return null;
   }
@@ -182,15 +159,12 @@ export class CxLangSemanter {
     const token = this.token;
     if (token?.isIn(['function', 'method'])) {
       this.nextRelevantToken();
-      const ident = this.currentIdentifier();
-      if (ident) {
-        let childs = [ident];
-        const type = this.currentTypeDecl();
-        if (type) childs.push(type);
-        const params = this.currentParamDecl();
-        if (params) childs.push(params);
-        return new CxLangSemant(CxLangSemantType.FunctionDecl, token, childs);
-      }
+      const childs = [
+        this.currentIdentifier(),
+        this.currentTypeDecl(),
+        this.currentParamDecl()
+      ];
+      return new CxLangSemant(CxLangSemantType.FunctionDecl, token, childs);
     }
     return null;
   }
@@ -199,35 +173,26 @@ export class CxLangSemanter {
     const token = this.token;
     if (token?.is('class')) {
       this.nextRelevantToken();
-      const ident = this.currentIdentifier();
-      if (ident) {
-        let childs = [ident];
+      const childs = [
+        this.currentIdentifier(),
         // TODO: gentype decl, extends, implements
-        // const type = this.currentTypeDecl();
-        // if (type) childs.push(type);
-        // const params = this.currentParamDecl();
-        // if (params) childs.push(params);
-        return new CxLangSemant(CxLangSemantType.ClassDecl, token, childs);
-      }
+      ];
+      return new CxLangSemant(CxLangSemantType.ClassDecl, token, childs);
     }
     return null;
   }
 
   private static currentParamDecl(): CxLangSemant|null {
-    let token = this.token;
+    const token = this.token;
     if (token?.is('(')) {
-      let params: CxLangSemant[]|undefined;
+      const childs: (CxLangSemant|null)[] = [];
       do {
-        token = this.nextRelevantToken(true);
-        const param = this.currentVarDecl();
-        if (param) {
-          if (!params) params = [];
-          params.push(param);
-        }
+        this.nextRelevantToken(true);
+        childs.push(this.currentVarDecl());
       } while (this.token?.is(','));
       if (this.token?.is(')')) {
         this.nextRelevantToken();
-        return new CxLangSemant(CxLangSemantType.ParamDecl, undefined, params);
+        return new CxLangSemant(CxLangSemantType.ParamDecl, token, childs);
       }
     }
     return null;
@@ -235,35 +200,30 @@ export class CxLangSemanter {
 
   // variable declaration; identifier [`:` type [`=` value]] | [`:=` value]
   private static currentVarDecl(): CxLangSemant|null {
-    const childs: CxLangSemant[] = [];
     const ident = this.currentIdentifier();
     if (ident) {
-      childs.push(ident);
+      const childs: (CxLangSemant|null)[] = [ident];
       const type = this.currentTypeDecl();
       if (type) {
         childs.push(type);
         if (type.token?.is(':=')) {
-          const value = this.currentTerm();
-          if (value) childs.push(value);
+          childs.push(this.currentExpression());
         }
       }
-      if (this.token?.is('=')) {
-        this.nextRelevantToken();
-        const value = this.currentTerm();
-        if (value) childs.push(value);
-      }
-      return new CxLangSemant(CxLangSemantType.VarDecl, undefined, childs);
+      childs.push(this.currentAssignment());
+      return new CxLangSemant(CxLangSemantType.VarDecl, ident.token, childs);
     }
     return null;
   }
 
-  // type; := | :type | ? | % | # | $
+  // type; `:=` | `:` type | `?` | `%` | `#` | `$`
   private static currentTypeDecl(): CxLangSemant|null {
     const token = this.token;
     // shorthand types
     if (token?.isIn(['?','%','#','$'])) {
       this.nextRelevantToken();
-      return new CxLangSemant(CxLangSemantType.TypeDecl, token);
+      const childs = [this.currentTypeArray()];
+      return new CxLangSemant(CxLangSemantType.TypeDecl, token, childs);
     }
     // inferred type
     else if (token?.is(':=')) {
@@ -272,75 +232,126 @@ export class CxLangSemanter {
     }
     // explicit type
     else if (token?.is(':')) {
-      const ntoken = this.nextRelevantToken();
-      if (
-        ntoken &&
-        (
-          ntoken.type == CxLangTokenType.Identifier ||
-          ntoken.type == CxLangTokenType.Keyword
-        )
-      ) {
-        this.nextRelevantToken();
-        // look for generic types
-        let childs: CxLangSemant[]|undefined;
-        const type = this.currentTypeArguments();
-        if (type) childs = [type];
-        return new CxLangSemant(CxLangSemantType.TypeDecl, ntoken, childs);
-      } else {
-        return null;
-      }
+      this.nextRelevantToken();
+      const childs = [this.currentType()];
+      return new CxLangSemant(CxLangSemantType.TypeDecl, token, childs);
+    }
+    return null;
+  }
+
+  private static currentType(): CxLangSemant|null {
+    const ident = this.currentIdentifier();
+    if (ident) {
+      const childs = [
+        ident,
+        this.currentTypeArguments(),
+        this.currentTypeArray()
+      ];
+      return new CxLangSemant(CxLangSemantType.Type, ident.token, childs);
     }
     return null;
   }
 
   // generic type in typing; < type [, type..] >
   private static currentTypeArguments(): CxLangSemant|null {
-    // this.pushCache();
-    let token = this.token;
+    const token = this.token;
     if (token?.is('<')) {
-      let types: CxLangSemant[]|undefined;
+      const childs: (CxLangSemant|null)[] = [];
       do {
-        token = this.nextRelevantToken(true);
-        const type = this.currentTypeDecl();
-        if (type) {
-          if (!types) types = [];
-          types.push(type);
-        } else {
-          return null;
-        }
+        this.nextRelevantToken(true);
+        childs.push(this.currentType());
       } while (this.token?.is(','));
       if (this.token?.is('>')) {
         this.nextRelevantToken();
-        return new CxLangSemant(CxLangSemantType.TypeArgument, undefined, types);
+        return new CxLangSemant(CxLangSemantType.TypeArgument, token, childs);
       }
     }
     return null;
   }
 
-  // term; value [operator value]
-  private static currentTerm(): CxLangSemant|null {
-    const childs: CxLangSemant[] = [];
-    let val = this.currentValue();
-    if (val) {
-      let op: CxLangSemant|null;
-      do {
-        childs.push(val);
-        op = this.currentOperator();
-        if (op) {
-          childs.push(op)
-          val = this.currentValue();
-        } else {
-          return new CxLangSemant(CxLangSemantType.Term, undefined, childs);
-        }
-      } while (op && val)
+  // type-array; `[` expression `]`
+  private static currentTypeArray(): CxLangSemant|null {
+    const token = this.token;
+    if (token?.is('[')) {
+      this.nextRelevantToken();
+      const childs = [this.currentExpression()];
+      if (this.token?.is(']')) {
+        this.nextRelevantToken();
+        return new CxLangSemant(CxLangSemantType.TypeArray, token, childs);
+      }
     }
     return null;
   }
 
-  // value; literal | declaration.value | declaration[invocation][indexing]
-  // TODO: scoping after inocation/indexing
-  private static currentValue(): CxLangSemant|null {
-    // TODO: get sign
+  // assignment; `=` expression
+  private static currentAssignment(): CxLangSemant|null {
+    const token = this.token;
+    if (token?.is('=')) {
+      this.nextRelevantToken();
+      const childs = [this.currentExpression()];
+      return new CxLangSemant(CxLangSemantType.Assignment, token, childs)
+    }
+    return null;
+  }
+
+  // expression; [unary-operator] expression [operator expression]
+  private static currentExpression(): CxLangSemant|null {
+    // const childs: CxLangSemant[] = [];
+    const token = this.token;
+    if (token?.is('new')) {
+      this.nextRelevantToken();
+      const childs = [this.currentAccessor(true)];
+      return new CxLangSemant(CxLangSemantType.NewExpression, token, childs);
+    }
+    else if (token) {
+      const childs = [this.currentUnaryOperator()];
+      while (true) {
+        childs.push(this.currentAccessor() || this.currentLiteral());
+        const op = this.currentOperator();
+        if (op) {
+          childs.push(op);
+        } else {
+          return new CxLangSemant(CxLangSemantType.Expression, token, childs);
+        }
+      }
+    }
+    return null;
+  }
+
+  // decl-expression: identifier [ivocation] [indexing..] [accessor]
+  // accessor: [`.`] decl-expression [accessor]
+  private static currentAccessor(allowTypeArgs: boolean = false): CxLangSemant|null {
+    const token = this.token;
+    if (token?.is('.')) this.nextRelevantToken();
+    const ident = this.currentIdentifier();
+    if (token && ident) {
+      const childs: (CxLangSemant|null)[] = [ident];
+      if (allowTypeArgs) childs.push(this.currentTypeArguments());
+      childs.push(this.currentInvocation());
+      // cover array of array of array ...
+      let indexing: CxLangSemant|null;
+      while (indexing = this.currentIndexing()) {
+        childs.push(indexing);
+      }
+      // more to come?
+      childs.push(this.currentAccessor());
+      return new CxLangSemant(CxLangSemantType.Accessor, token, childs);
+    }
+    return null;
+  }
+
+  // unary operator: `+`, `-`, `~`, `not`
+  private static currentUnaryOperator(): CxLangSemant|null {
+    const token = this.token;
+    if (token?.isIn(['+', '-', '~', 'not'])) {
+      this.nextRelevantToken();
+      return new CxLangSemant(CxLangSemantType.UnaryOperator, token);
+    }
+    return null;
+  }
+
+  // literal
+  private static currentLiteral(): CxLangSemant|null {
     const token = this.token;
     if (token && (
       token.type == CxLangTokenType.LiteralBinary ||
@@ -352,87 +363,54 @@ export class CxLangSemanter {
       token.isIn(['true', 'false', 'null'])
     )) {
       this.nextRelevantToken();
-      return new CxLangSemant(CxLangSemantType.Value, token);
+      return new CxLangSemant(CxLangSemantType.Literal, token);
     }
     // TODO multiline strings
     else if (token && (
       token.type == CxLangTokenType.LiteralString
     )) {
+      this.nextRelevantToken();
       // look for indexing
-      let childs: CxLangSemant[]|undefined;
-      const indexing = this.currentIndexing();
-      if (indexing) childs = [indexing];
-      this.nextRelevantToken();
-      return new CxLangSemant(CxLangSemantType.Indexing, token, childs);
+      const childs = [
+        new CxLangSemant(CxLangSemantType.LiteralStringLine, token),
+        this.currentIndexing()
+      ];
+      return new CxLangSemant(CxLangSemantType.LiteralString, token, childs);
     }
-    else if (token && (
-      token.type == CxLangTokenType.Identifier ||
-      token.type == CxLangTokenType.Keyword
-    )) {
-      this.nextRelevantToken();
-      let childs: CxLangSemant[]|undefined;
-      // look for child accessor
-      // if (this.nextRelevantToken()?.is('.')) {
-      //   const child = this.getValue(true);
-      //   if (child) childs = [child];
-      // }
-      // look for invocation and indexing
-      // else {
-        const invocation = this.currentInvocation();
-        if (invocation) childs = [invocation];
-        const indexing = this.currentIndexing();
-        if (indexing) {
-          if (!childs) childs = [];
-          childs = [indexing];
-        }
-      // }
-      return new CxLangSemant(CxLangSemantType.Indexing, token, childs);
-    }
+    // TODO array literals
     return null;
   }
 
   // invocation; ( term [, term..] )
   private static currentInvocation(): CxLangSemant|null {
-    let token = this.token;
+    const token = this.token;
     if (token?.is('(')) {
-      let terms: CxLangSemant[]|undefined;
+      const childs: (CxLangSemant|null)[] = [];
       do {
-        token = this.nextRelevantToken(true);
-        const term = this.currentTerm();
-        if (term) {
-          if (!terms) terms = [];
-          terms.push(term);
-        } else {
-          return null;
-        }
+        this.nextRelevantToken(true);
+        childs.push(this.currentExpression());
       } while (this.token?.is(','));
       if (this.token?.is(')')) {
         this.nextRelevantToken();
-        return new CxLangSemant(CxLangSemantType.Invocation, undefined, terms);
+        return new CxLangSemant(CxLangSemantType.Invocation, token, childs);
       }
     }
     return null;
   }
 
-  // indexing; `[` term [, term..] `]`
+  // indexing; `[` expression [, expression..] `]`
   private static currentIndexing(): CxLangSemant|null {
     // TODO spreading
-    let token = this.token;
+    const token = this.token;
     if (token?.is('[')) {
-      let terms: CxLangSemant[]|undefined;
+      const childs: (CxLangSemant|null)[] = [];
       do {
-        token = this.nextRelevantToken(true);
-        const term = this.currentTerm();
-        if (term) {
-          if (!terms) terms = [];
-          terms.push(term);
-        } else {
-          return null;
-        }
+        this.nextRelevantToken(true);
+        childs.push(this.currentExpression());
       } while (this.token?.is(','));
       if (this.token?.is(']')) {
         this.nextRelevantToken();
-        return new CxLangSemant(CxLangSemantType.Invocation, undefined, terms);
+        return new CxLangSemant(CxLangSemantType.Indexing, token, childs);
       }
     }
     return null;
@@ -458,14 +436,23 @@ export class CxLangSemanter {
 
 export class CxLangSemant {
   public type: CxLangSemantType;
-  public token: CxLangToken|undefined;
+  public token: CxLangToken;
   public childs: CxLangSemant[]|undefined;
   public parent: CxLangSemant|undefined;
 
-  constructor (type: CxLangSemantType, token: CxLangToken|undefined, childs: CxLangSemant[]|undefined = undefined) {
+  constructor (type: CxLangSemantType, token: CxLangToken, childs: (CxLangSemant|null)[]|undefined = undefined) {
     this.type = type;
     this.token = token;
-    this.childs = childs;
+    this.childs = undefined;
+    // copy only not-null childs
+    if (childs) {
+      for (const c of childs) {
+        if (c) {
+          if (!this.childs) this.childs = [];
+          this.childs.push(c)
+        }
+      }
+    }
     if (this.childs) {
       for (const child of this.childs) {
         child.parent = this;
@@ -478,6 +465,90 @@ export class CxLangSemant {
     this.childs.push(semant);
     semant.parent = this;
   }
+
+  public getIdentifier(): string {
+    if (this.childs) {
+      for (const child of this.childs) {
+        if (child.type == CxLangSemantType.Identifier) {
+          return child.token.text || '';
+        }
+      }
+    }
+    return '';
+  }
+
+  /**
+   * Returns the definitions following the identifier as pretty printed string
+   */
+  public getDetailsText(): string {
+    // console.log('getting details for', this);
+    let texts: string[] = [];
+    let acquire = false;
+    if (this.childs) {
+      for (const child of this.childs) {
+        if (!acquire) {
+          if (child.type == CxLangSemantType.Identifier) acquire = true;
+        } else {
+          texts.push(child.prettyPrint());
+        }
+      }
+    }
+    return texts.join('\u2009');
+  }
+
+  public prettyPrint(): string {
+    let text = '';
+    switch (this.type) {
+      case CxLangSemantType.Keyword:
+      case CxLangSemantType.Identifier:
+        text = this.token.text || 'NA';
+        break;
+      case CxLangSemantType.StorageDecl:
+      case CxLangSemantType.EnumDecl:
+      case CxLangSemantType.TypeDecl:
+      case CxLangSemantType.Assignment:
+        text = this.token.text + '\u2009' + this.prettyPrintChilds();
+        break;
+      case CxLangSemantType.Literal:
+      case CxLangSemantType.LiteralStringLine:
+      case CxLangSemantType.UnaryOperator:
+      case CxLangSemantType.Operator:
+        text = this.token.text;
+        break;
+      case CxLangSemantType.TypeArgument:
+        text = '<\u2009' + this.prettyPrintChilds() + '\u2009>';
+        break;
+      case CxLangSemantType.ParamDecl:
+      case CxLangSemantType.Invocation:
+        text = '(\u2009' + this.prettyPrintChilds() + '\u2009)';
+        break;
+      case CxLangSemantType.Indexing:
+      case CxLangSemantType.TypeArray:
+        text = '[\u2009' + this.prettyPrintChilds() + '\u2009]';
+        break;
+      case CxLangSemantType.Accessor:
+        if (this.token.is('.')) text = '.\u2009';
+        text += this.prettyPrintChilds();
+        break;
+      case CxLangSemantType.NewExpression:
+        text = 'New\u2009' + this.prettyPrintChilds();
+        break;
+      default:
+        text = this.prettyPrintChilds();
+        break;
+    }
+    return text;
+  }
+
+  public prettyPrintChilds(): string {
+    let texts: string[] = [];
+    if (this.childs) {
+      for (const child of this.childs) {
+        texts.push(child.prettyPrint());
+      }
+    }
+    return texts.join('\u2009');
+  }
 }
 
 export enum CxLangSemantType {
@@ -488,14 +559,22 @@ export enum CxLangSemantType {
   EnumDecl,
   VarDecl,
   TypeDecl,
+  Type,
   TypeArgument,
+  TypeArray,
   FunctionDecl,
   ParamDecl,
   ClassDecl,
-  Term,
-  Value,
+  Assignment,
+  Expression,
+  NewExpression,
+  Accessor,
+  Literal,
+  LiteralString,
+  LiteralStringLine,
   Invocation,
   Indexing,
+  UnaryOperator,
   Operator,
   Scope,
   EndScope

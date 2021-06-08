@@ -98,12 +98,14 @@ export class CxLangTokenizedLine {
   public pcsStackAtLineEnd: string = '';
 
   private _text: string;
+  private _charIndex: number;
 
   constructor(line: vscode.TextLine, stack: string) {
     this._line = line;
     this.range = line.range;
     this.text = line.text;
     this._text = this.text;
+    this._charIndex = 0;
     // console.log('tokenizing ' + this._text);
     while (true) {
       // in comment blocks, only look for end of comment
@@ -155,7 +157,7 @@ export class CxLangTokenizedLine {
         // float
         if (this.tokenizes(/^[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?/, CxLangTokenType.LiteralFloat)) continue;
         // integer
-        if (this.tokenizes(/^[0-9]+?/, CxLangTokenType.LiteralInteger)) continue;
+        if (this.tokenizes(/^[0-9]+/, CxLangTokenType.LiteralInteger)) continue;
         // binary
         if (this.tokenizes(/^%[01]+/, CxLangTokenType.LiteralBinary)) continue;
         // hex
@@ -201,8 +203,13 @@ export class CxLangTokenizedLine {
     let tokened: boolean = false;
     this._text = this._text.replace(pattern, (m) => {
       const index = this.tokens.length;
-      this.tokens.push(new CxLangToken(ttype, m, index));
+      const l0 = this._line.range.start.line;
+      const c0 = this._charIndex;
+      const c1 = this._charIndex;// + Math.max(m.length-1,0);
+      const range = new vscode.Range(l0, c0, l0, c1);
+      this.tokens.push(new CxLangToken(ttype, m, index, range));
       tokened = true;
+      this._charIndex += m.length;
       return '';
     });
     return tokened;
@@ -211,6 +218,11 @@ export class CxLangTokenizedLine {
   public updateLine(line: vscode.TextLine) {
     this._line = line;
     this.range = line.range;
+    const l0 = line.range.start.line;
+    // update tokens' ranges
+    this.tokens.forEach((t) => {
+      t.range = new vscode.Range(l0, t.range.start.character, l0, t.range.end.character);
+    })
   }
 
   public isEmptyOrWhitespace(): boolean {
@@ -307,11 +319,11 @@ export class CxLangToken {
   public parent: CxLangToken|null = null;
   public range: vscode.Range;
 
-  constructor (type: CxLangTokenType, text: string, index: number) {
+  constructor (type: CxLangTokenType, text: string, index: number, range: vscode.Range) {
     this.type = type;
     this.text = text;
     this.index = index;
-    this.range = new vscode.Range(0,0,0,0);
+    this.range = range;
   }
 
   public is(text: string): boolean {
