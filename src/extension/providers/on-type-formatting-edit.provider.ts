@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { CxLangTokenizer, CxLangTokenType } from '../features/cxlang/cxlang-tokenizer.feature';
 
 const keywordDelimiters = [' ', '\t', '(', ')', '<', '>', '[', ']', ',', ';', '-', '+', '*', '/', "'"];
 // TODO: move to something global
@@ -29,7 +30,7 @@ export class CxOnTypeFormattingEditProvider implements vscode.OnTypeFormattingEd
         { scheme: 'file', language: 'cerberus-x' },
         new CxOnTypeFormattingEditProvider(),
         " ",
-        "\t", "\r", "\n"
+        "\t", "\r", "\n", "(", ")", "[", "]", "<", ">", "=", "+", "-", "*", "/", "~", "|", "&"
       )
     );
   }
@@ -43,52 +44,31 @@ export class CxOnTypeFormattingEditProvider implements vscode.OnTypeFormattingEd
    * @param token `vscode.CancellationToken`
    * @returns `vscode.TextEdit`s to apply
    */
-  public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
+  public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, ctoken: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]> {
     const newline = (char == '\r' || char == '\n');
     // text to examine - when newline, complete previous line
     let lpos = position.line;
-    let cpos1 = position.character - 1;
-    let text: string;
+    let cpos = position.character - 1;
     if (newline) {
       lpos--;
-      text = document.lineAt(lpos).text;
-      cpos1 = text.length - 1;
+      const text = document.lineAt(lpos).text;
+      cpos = text.length - 1;
     } else {
-      cpos1 = position.character - 1;
-      text = document.lineAt(lpos).text.substr(0, cpos1);
+      cpos = position.character - 2;
     }
-    // go through line, extract last typed word
-    let cpos0 = -1;
-    let instr: boolean = false;
-    for (let index = 0; index < text.length; index++) {
-      const ch = text.charAt(index);
-      // track string delimiters (won't work with multiline strings)
-      if (ch == '"') {
-        instr = !instr;
-        continue;
-      }
-      if (keywordDelimiters.includes(ch)) {
-        cpos0 = index;
-      }
-    }
-    // extract last word
-    if (!instr) {
-      cpos0++;
-      let word = text.substring(cpos0);
-      // is keyword?
-      if (keywords.find((val) => {
-        return val.toLowerCase() == word;
-      })) {
-        //... then capitalize
-        word = word.charAt(0).toUpperCase() + word.substring(1);
-        // and replace
-        const range = new vscode.Range(
-          new vscode.Position(lpos, cpos0),
-          new vscode.Position(lpos, cpos1)
-        );
-        const edit = new vscode.TextEdit(range, word);
-        return [edit];
-      }
+    // go through line, find last typed token
+    const tokenized = CxLangTokenizer.tokenize(document);
+    const line = tokenized.lines[lpos];
+    const token = line.tokens.find((token) => {
+      return cpos >= token.range.start.character && cpos < token.range.end.character;
+    });
+    if (token?.type == CxLangTokenType.Keyword) {
+      // capitalize
+      let text = token.text;
+      text = text.charAt(0).toUpperCase() + text.substring(1);
+      // and replace
+      const edit = new vscode.TextEdit(token.range, text);
+      return [edit];
     }
     return null;
   }

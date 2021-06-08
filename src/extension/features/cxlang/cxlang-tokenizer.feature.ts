@@ -205,7 +205,7 @@ export class CxLangTokenizedLine {
       const index = this.tokens.length;
       const l0 = this._line.range.start.line;
       const c0 = this._charIndex;
-      const c1 = this._charIndex;// + Math.max(m.length-1,0);
+      const c1 = this._charIndex + m.length;
       const range = new vscode.Range(l0, c0, l0, c1);
       this.tokens.push(new CxLangToken(ttype, m, index, range));
       tokened = true;
