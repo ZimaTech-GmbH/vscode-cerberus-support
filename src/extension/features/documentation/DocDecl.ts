@@ -41,7 +41,7 @@ export class DocDecl {
   private uident?: string;
   private uidentscope?: string;
   private uidentparams?: string;
-  private static byUid: any = {};
+  private static byUid: {[uid: string]: DocDecl} = {};
 
   // initialize decl fields by object
   constructor(obj: any) {
@@ -74,6 +74,53 @@ export class DocDecl {
    */
   public static getByUid(uid: string): DocDecl|null {
     return this.byUid[uid];
+  }
+
+  public static getByIdent(ident: string): DocDecl[]|null {
+    if (!ident) return null;
+    return this._root.getChildsByIdent(ident, true);
+  }
+
+  /**
+   * Returns child decl by ident
+   * @param ident identifier to match
+   * @returns matching `DocDecl` or `null`
+   */
+   public getChild(ident: string): DocDecl|null {
+    // let decl: DocDecl = this;
+    // // absolute path?
+    // if (ident.startsWith('/')) {
+    //   decl = DocDecl._docroot;
+    // } else if(ident.startsWith('.')) {
+    //   decl = DocDecl._modroot;
+    // }
+    // // make decls findable again
+    // DocDecl._finderRun += 1;
+    // return decl.findFromHere(ident);
+    for (const uid in DocDecl.byUid) {
+      const d = DocDecl.byUid[uid];
+      if (d.canBeFound() && d.ident == ident) {
+        return d;
+      }
+    }
+    return null;
+  }
+
+  public getChildsByIdent(ident: string, deep: boolean = false): DocDecl[]|null {
+    if (!ident || !this.childs) return null;
+    ident = ident.toLowerCase();
+    const decls: DocDecl[] = [];
+    for (const d of this.childs) {
+      if (d.canBeFound() && d.ident.toLowerCase() == ident) {
+        decls.push(d);
+      }
+      if (deep) {
+        const declsDeep = d.getChildsByIdent(ident, true);
+        if (declsDeep) decls.push(...declsDeep);
+      }
+    }
+    if (decls.length == 0) return null;
+    return decls;
   }
 
   /**
@@ -142,31 +189,6 @@ export class DocDecl {
         return true;
     }
     return false;
-  }
-
-  /**
-   * Find child decl by ident
-   * @param ident identifier to match
-   * @returns matching `DocDecl` or `null`
-   */
-  public find(ident: string): DocDecl|null {
-    // let decl: DocDecl = this;
-    // // absolute path?
-    // if (ident.startsWith('/')) {
-    //   decl = DocDecl._docroot;
-    // } else if(ident.startsWith('.')) {
-    //   decl = DocDecl._modroot;
-    // }
-    // // make decls findable again
-    // DocDecl._finderRun += 1;
-    // return decl.findFromHere(ident);
-    for (const uid in DocDecl.byUid) {
-      const d = DocDecl.byUid[uid];
-      if (d.canBeFound() && d.ident == ident) {
-        return d;
-      }
-    }
-    return null;
   }
 
   // // find decl from this decl

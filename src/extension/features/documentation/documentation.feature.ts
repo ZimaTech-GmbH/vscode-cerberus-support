@@ -35,7 +35,7 @@ export class CxDocumentation {
   /**
    * Registers the feature and prepares components
    */
-  public static show(args: any = undefined): void {
+  public static init(): void {
     // create web panel
     let panel = vscode.window.createWebviewPanel(
       'cerberus-x.documentation',
@@ -55,19 +55,6 @@ export class CxDocumentation {
     // populate web view
     this.webview = panel.webview;
 
-    // start decl given?
-    if (args?.autolocate == 'curpos') {
-      const editor = vscode.window.activeTextEditor;
-      if (editor?.selection.isEmpty) {
-        // the Position object gives you the line and character where the cursor is
-        const position = editor.selection.active;
-        const range = editor.document.getWordRangeAtPosition(position);
-        const word = editor.document.getText(range);
-        console.log(word);
-        // TODO: find by ident
-      }
-    }
-
     // initialize transformer and get html for current decl
     DocDeclHtmlTransformer.setWebview(this.webview);
     this.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
@@ -84,19 +71,44 @@ export class CxDocumentation {
             break;
           // navigate to ident
           case 'navigate':
-            this.currentDecl = this.currentDecl.find(message.text) || this.rootDecl;
+            const navResults = DocDecl.getByIdent(message.text);
+            this.currentDecl = navResults ? navResults[0] : this.rootDecl;
             vscode.window.showInformationMessage('by ident '+message.text);
             panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // search
           case 'search':
-
+            const results = DocDecl.getByIdent(message.text);
+            this.currentDecl = results ? results[0] : this.rootDecl;
+            vscode.window.showInformationMessage('searched '+message.text);
+            panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+            break;
           default:
             vscode.window.showInformationMessage('Unknown message type from webview recieved.')
             break;
         }
       }
     );
+  }
+
+  public static show(args: any = undefined): void {
+    if (!this.webview) this.init();
+    // start decl given?
+    if (args?.autolocate == 'curpos') {
+      const editor = vscode.window.activeTextEditor;
+      if (editor?.selection.isEmpty) {
+        // the Position object gives you the line and character where the cursor is
+        const position = editor.selection.active;
+        const range = editor.document.getWordRangeAtPosition(position);
+        const word = editor.document.getText(range);
+        console.log(word);
+        // TODO: find by ident
+        const results = DocDecl.getByIdent(word);
+        this.currentDecl = results ? results[0] : this.rootDecl;
+        vscode.window.showInformationMessage('searched '+word);
+        this.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+      }
+    }
   }
 
   /**
@@ -114,7 +126,8 @@ export class CxDocumentation {
           // for quick access and store in global field
           this.rootDecl = this.prepareDeclForUse(loadedDecls);
           // start navigating at Home
-          this.currentDecl = this.rootDecl.find('Home') || this.rootDecl;
+          const results = DocDecl.getByIdent('Home');
+          this.currentDecl = results ? results[0] : this.rootDecl;
           const actShowHelp = 'Show Help';
           vscode.window.showInformationMessage('Cerberus X decls loaded', actShowHelp).then(
             (action) => {
