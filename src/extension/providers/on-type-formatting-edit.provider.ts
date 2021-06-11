@@ -65,7 +65,7 @@ export class CxOnTypeFormattingEditProvider implements vscode.OnTypeFormattingEd
     if (token?.type == CxLangTokenType.Keyword) {
       // capitalize
       let text = token.text;
-      text = text.charAt(0).toUpperCase() + text.substring(1);
+      text = text.charAt(0).toUpperCase() + text.substring(1).toLowerCase();
       // and replace
       const edit = new vscode.TextEdit(token.range, text);
       return [edit];
