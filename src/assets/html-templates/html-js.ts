@@ -9,6 +9,12 @@ function navigate(ident) {
 function navigateToHash(ident) {
   window.location.hash = ident;
 }
+function navBwd(ident) {
+  vscode.postMessage({command: 'navBwd'});
+}
+function navFwd(ident) {
+  vscode.postMessage({command: 'navFwd'});
+}
 function navInput(elem, event) {
   if (event.keyCode == 13) {
     navigate(elem.value);

@@ -14,6 +14,10 @@ export class CxDocumentation {
   public static rootDecl: DocDecl;
   /** currently (navigated to) DocDecl */
   private static currentDecl: DocDecl;
+  /** history of navigated DocDecl */
+  private static history: DocDecl[] = [];
+  /** when going back, this is the stack of "forward" DocDecl */
+  private static historyRev: DocDecl[] = [];
   /** webview (instance needed for navigating and stuff) */
   private static webview: vscode.Webview;
 
@@ -65,19 +69,43 @@ export class CxDocumentation {
         switch (message.command) {
           // navigate to given site
           case 'navigateById':
+            this.history.unshift(this.currentDecl);
+            this.historyRev = [];
             this.currentDecl = DocDecl.getByUid(message.text) || this.rootDecl;
             vscode.window.showInformationMessage('by id '+message.text);
             panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate to ident
           case 'navigate':
+            this.history.unshift(this.currentDecl);
+            this.historyRev = [];
             const navResults = DocDecl.getByIdent(message.text);
             this.currentDecl = navResults ? navResults[0] : this.rootDecl;
             vscode.window.showInformationMessage('by ident '+message.text);
             panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
+          // navigate back
+          case 'navBwd':
+            const rev = this.history.shift();
+            if (rev) {
+              this.historyRev.unshift(this.currentDecl);
+              this.currentDecl = rev;
+              panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+            }
+            break;
+          // navigate forward
+          case 'navFwd':
+            const rrev = this.historyRev.shift();
+            if (rrev) {
+              this.history.unshift(this.currentDecl);
+              this.currentDecl = rrev;
+              panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+            }
+            break;
           // search
           case 'search':
+            this.history.unshift(this.currentDecl);
+            this.historyRev = [];
             const results = DocDecl.getByIdent(message.text);
             this.currentDecl = results ? results[0] : this.rootDecl;
             vscode.window.showInformationMessage('searched '+message.text);
@@ -97,11 +125,12 @@ export class CxDocumentation {
     if (args?.autolocate == 'curpos') {
       const editor = vscode.window.activeTextEditor;
       if (editor?.selection.isEmpty) {
+        this.history.unshift(this.currentDecl);
         // the Position object gives you the line and character where the cursor is
         const position = editor.selection.active;
         const range = editor.document.getWordRangeAtPosition(position);
         const word = editor.document.getText(range);
-        console.log(word);
+        // console.log(word);
         // TODO: find by ident
         const results = DocDecl.getByIdent(word);
         this.currentDecl = results ? results[0] : this.rootDecl;
@@ -163,5 +192,19 @@ export class CxDocumentation {
       }
     }
     return decl;
+  }
+
+  /**
+   * Whether navigating back is possible
+   */
+  public static canNavBack(): boolean {
+    return this.history.length > 0;
+  }
+
+  /**
+   * Whether navigating forward is possible
+   */
+   public static canNavFwd(): boolean {
+    return this.historyRev.length > 0;
   }
 }

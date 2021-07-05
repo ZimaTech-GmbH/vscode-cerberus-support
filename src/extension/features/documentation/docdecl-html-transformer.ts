@@ -9,6 +9,7 @@ import iconCerberus from '../../../assets/html-templates/svg-cerberus';
 import iconNavBack from '../../../assets/html-templates/svg-nav-back';
 import iconNavFwd from '../../../assets/html-templates/svg-nav-fwd';
 import iconNavSearch from '../../../assets/html-templates/svg-nav-search';
+import { CxDocumentation } from './documentation.feature';
 
 /**
  * Transformer for [[DocDecl]] -> HTML
@@ -48,6 +49,20 @@ ${this.getHead(decl)}
 ${this.getBody(decl)}
 </html>`;
     
+    return html;
+  }
+
+  // transforms urls in `html` as in links for use in webview
+  private static transformUrls(html: string): string {
+    // replace makedocs links <a href="uid:UID">
+    html = html.replace(/<a\s([^>]*?)href="uid:([0-9]*)"(.*?)>/g, '<a $1onClick="navigateById(\'$2\')"$3>');
+    // replace makedocs anchor links <a href="#HASH">
+    html = html.replace(/<a\s([^>]*?)href="(#[^"]*)"(.*?)>/g, '<a $1onClick="navigateToHash(\'$2\')"$3>');
+    // fix image srcs <img src="SRC"/>
+    html = html.replace(/<img\s([^>]*?)src="([^"]*)"(.*?)>/g, (match, p1, p2, p3) => {
+      const src = this.webview.asWebviewUri(vscode.Uri.file(CxConfiguration.get('path') + '/docs/html/' + p2));
+      return `<img ${p1}src="${src}"${p3}/>`;
+    })
     return html;
   }
 
@@ -97,36 +112,22 @@ ${this.getBrowser(decl)}
 ${this.getNavi(decl)}
 </header>`;
 
-//   // build navigation path
-//   let path2: any[] = [decl];
-//   let c = decl;
-//   while (c.parent) {
-//     path2.unshift(c.parent);
-//     c = c.parent;
-//   }
-//   for (const c of path2) {
-//     html += `
-// &raquo;&nbsp;<span onClick="navigateById('${c.uid}')" style="cursor: pointer;color:var(${c.color});">${c.getName()}</span>&nbsp;
-// `;
-//   }
-    
-//   html += `
-//   </header>
-//     `;
     return html;
   }
 
   // get "browser" navigator
   private static getBrowser(decl: DocDecl): string {
+    const bwdClass = CxDocumentation.canNavBack() ? '' : 'inactive';
+    const fwdClass = CxDocumentation.canNavFwd() ? '' : 'inactive';
     let html = `
 <nav id="browser">
-  <div id="logo">
+  <div id="logo" onClick="navigate('Home')">
     ${iconCerberus}
   </div>
-  <div id="navback">
+  <div id="navback" onClick="navBwd()" class="${bwdClass}">
     ${iconNavBack}
   </div>
-  <div id="navfwd" class="inactive">
+  <div id="navfwd" onClick="navFwd()" class="${fwdClass}">
   ${iconNavFwd}
   </div>
   <div id="addressbar">
@@ -185,17 +186,7 @@ ${this.getNavi(decl)}
   // get main (content) for page
   private static getMain(decl: DocDecl): string {
     // title to display on top
-    let title: string = decl.name;
-    // if (decl.prefix) {
-    //   title = `<span style="color:var(${decl.color});">&square;</span>${decl.prefix} ${title}`;
-    // }
-    title = `
-<div class="title" style="--color: var(${decl.color});">
-  <div class="subtitle">
-    <div class="property-icon">${decl.icon}</div>${decl.prefix} in ${decl.getUident()}
-  </div>
-  <h1>${decl.name} <span>: ${decl.getTextOfChild('type')} ${decl.getTextOfChild('uident_params')}</span></h1>
-</div>`;
+    let title: string = this.getTitle(decl);
 
     // chapters to list on this page
     let chapters: DocDecl[] = [];
@@ -235,18 +226,7 @@ ${this.getNavi(decl)}
     let tcontents: string = '';
     if (contents.length > 0) {
       for (const c of contents) {
-        let text = c.ident;
-
-        // replace makedocs links <a href="uid:UID">
-        text = text.replace(/<a\s([^>]*?)href="uid:([0-9]*)"(.*?)>/g, '<a $1onClick="navigateById(\'$2\')"$3>');
-        // replace makedocs anchor links <a href="#HASH">
-        text = text.replace(/<a\s([^>]*?)href="(#[^"]*)"(.*?)>/g, '<a $1onClick="navigateToHash(\'$2\')"$3>');
-        // fix image srcs <img src="SRC"/>
-        text = text.replace(/<img\s([^>]*?)src="([^"]*)"(.*?)>/g, (match, p1, p2, p3) => {
-          const src = this.webview.asWebviewUri(vscode.Uri.file(CxConfiguration.get('path') + '/docs/html/' + p2));
-          return `<img ${p1}src="${src}"${p3}/>`;
-        })
-        tcontents += text;
+        tcontents += this.transformUrls(c.ident);
       }
     }
 
@@ -259,10 +239,10 @@ ${tcontents}`;
     if (chapters.length > 0) {
       html += `
 <h2>Contents</h2>
-<table>
+<table class="toc">
   <thead>
     <tr>
-      <th width="38%">Title</th>
+      <th>Title</th>
       <th>Description</th>
     </tr>
   </thead>
@@ -271,7 +251,8 @@ ${tcontents}`;
         const target = c.target || c.uid;
         const tdecl = DocDecl.getByUid(target);
         const name = c.name;
-        const summary = tdecl ? tdecl.getTextOfChild('summary') : '';
+        let summary = tdecl ? tdecl.getTextOfChild('summary') : '';
+        summary = this.transformUrls(summary);
         html += `
     <tr>
       <td onClick="navigateById('${target}')" style="--color: var(${tdecl?.color})"><div class="property-icon">${tdecl?.icon}</div>${name}</td>
@@ -280,10 +261,47 @@ ${tcontents}`;
       }
       html += `
   </tbody>
-</table>`;
+</table>
+
+<hr class="content-ruler"/>`;
+      for (const c of chapters) {
+        html += '<article class="decl">';
+        html += this.getTitle(c);
+        html += this.transformUrls(c.getTextOfChild('description'));
+        html += '</article>';
+      }
     }
     html += `
 </main>`;
+    return html;
+  }
+
+  private static getTitle(decl: DocDecl): string {
+    let txtType = decl.getTextOfChild('type');
+    let txtParams = '';
+    switch (decl.kind) {
+      case 'function':
+      case 'classfunction':
+      case 'method':
+        txtParams = '(';
+        let params: string[] = [];
+        for (const c of decl.childs || []) {
+          if (c.kind == 'parameter') {
+            let param = c.ident;
+            let t = c.getTextOfChild('type');
+            if (t) param += ':' + t;
+            let d = c.getTextOfChild('initial_value');
+            if (d) param += '=' + d;
+            params.push(param);
+          }
+        }
+        txtParams += params.join(', ');
+        txtParams += ')';
+    }
+    let html = `
+<div class="title" style="--color: var(${decl.color});" id="decl-${decl.uid}">
+  <h1><div class="property-icon">${decl.icon}</div><span>${decl.prefix}</span> ${decl.name} <span>: ${txtType} ${txtParams}</span></h1>
+</div>`;
     return html;
   }
 }
