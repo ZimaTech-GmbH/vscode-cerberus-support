@@ -41,7 +41,10 @@ export class CxLangSemanter {
         // doc.appendChild(semant);
         semants.push(semant);
       }
-      else if (token.isIn(['if', 'select', 'while', 'repeat', 'for'])) {
+      else if (semant = this.currentIfBlock()) {
+        semants.push(semant);
+      }
+      else if (token.isIn(['select', 'while', 'repeat', 'for'])) {
         // doc.appendChild(
         semants.push(
           new CxLangSemant(CxLangSemantType.Scope, token)
@@ -428,6 +431,27 @@ export class CxLangSemanter {
     )) {
       this.nextRelevantToken(true);
       return new CxLangSemant(CxLangSemantType.Operator, token);
+    }
+    return null;
+  }
+
+  // if block
+  private static currentIfBlock(): CxLangSemant|null {
+    const token = this.token;
+    if (token && token.is('if')) {
+      // if block is when nothing follows then (or then omitted)
+      let t: CxLangToken|null;
+      let hasThen: boolean = false;
+      let isOneLiner: boolean = false;
+      while (t = this.nextRelevantToken()) {
+        if (!hasThen) {
+          if (t.is('then')) hasThen = true;
+        } else {
+          isOneLiner = true;
+        }
+      }
+      if (!isOneLiner) return new CxLangSemant(CxLangSemantType.Scope, token);
+      return null;
     }
     return null;
   }
