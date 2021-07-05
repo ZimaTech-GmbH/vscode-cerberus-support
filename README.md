@@ -30,27 +30,34 @@ This file was auto-generated with `zdoccer.js` 1.3.0
       - [`public static get(section: string): any`](#public-static-get-section-string-any)
       - [`public static set(section: string, value: any, target: vscode.ConfigurationTarget = vscode.ConfigurationTarget.Workspace): Thenable<void>`](#public-static-set-section-string-value-any-target-vscode-configurationtarget-vscode-configurationtarget-workspace-thenable-void)
       - [`public static onConfigurationValid(callback: ()=>void): void`](#public-static-onconfigurationvalid-callback-void-void)
+      - [`public getDetailsText(): string`](#public-getdetailstext-string)
+      - [`// public nextTokenIndex(from: number = 0): number`](#public-nexttokenindex-from-number-0-number)
     - [`class DocDeclHtmlTransformer`](#class-docdeclhtmltransformer)
       - [`public static setWebview(webview: vscode.Webview)`](#public-static-setwebview-webview-vscode-webview)
       - [`public static transform(decl: DocDecl): string`](#public-static-transform-decl-docdecl-string)
     - [`class DocDecl`](#class-docdecl)
       - [`public static getByUid(uid: string): DocDecl|null`](#public-static-getbyuid-uid-string-docdecl-null)
+      - [`public getChild(ident: string): DocDecl|null`](#public-getchild-ident-string-docdecl-null)
       - [`public getTextOfChild(kind: string): string`](#public-gettextofchild-kind-string-string)
       - [`public getDocPath(): string`](#public-getdocpath-string)
       - [`public getUident(): string`](#public-getuident-string)
-      - [`public find(ident: string): DocDecl|null`](#public-find-ident-string-docdecl-null)
     - [`class CxDocumentation`](#class-cxdocumentation)
       - [`public static rootDecl: DocDecl`](#public-static-rootdecl-docdecl)
       - [`private static currentDecl: DocDecl`](#private-static-currentdecl-docdecl)
+      - [`private static history: DocDecl[] = []`](#private-static-history-docdecl)
+      - [`private static historyRev: DocDecl[] = []`](#private-static-historyrev-docdecl)
+      - [`private static panel: vscode.WebviewPanel`](#private-static-panel-vscode-webviewpanel)
       - [`private static webview: vscode.Webview`](#private-static-webview-vscode-webview)
       - [`public static build(): Promise<void>`](#public-static-build-promise-void)
-      - [`public static show(): void`](#public-static-show-void)
+      - [`public static init(): void`](#public-static-init-void)
       - [`public static loadDecls()`](#public-static-loaddecls)
+      - [`public static canNavBack(): boolean`](#public-static-cannavback-boolean)
+      - [`public static canNavFwd(): boolean`](#public-static-cannavfwd-boolean)
     - [`class CxDocumentSymbolProvider`](#class-cxdocumentsymbolprovider)
       - [`public provideDocumentSymbols( document: vscode.TextDocument, token: vscode.CancellationToken ): vscode.DocumentSymbol[]`](#public-providedocumentsymbols-document-vscode-textdocument-token-vscode-cancellationtoken-vscode-documentsymbol)
     - [`class CxOnTypeFormattingEditProvider`](#class-cxontypeformattingeditprovider)
       - [`public static init(context: vscode.ExtensionContext)`](#public-static-init-context-vscode-extensioncontext)
-      - [`public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]>`](#public-provideontypeformattingedits-document-vscode-textdocument-position-vscode-position-char-string-options-vscode-formattingoptions-token-vscode-cancellationtoken-vscode-providerresult-vscode-textedit)
+      - [`public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, ctoken: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]>`](#public-provideontypeformattingedits-document-vscode-textdocument-position-vscode-position-char-string-options-vscode-formattingoptions-ctoken-vscode-cancellationtoken-vscode-providerresult-vscode-textedit)
 
 
 ---
@@ -352,6 +359,36 @@ Defines functions to be called when configuration is valid
 
 ---
 
+*transformed Javadoc from src/extension/features/cxlang/cxlang-semanter.feature.ts*
+
+<div id="public-getdetailstext-string"></div><!-- alias: getdetailstext -->
+
+### `public getDetailsText(): string`
+
+
+Returns the definitions following the identifier as pretty printed string
+
+
+
+
+---
+
+*transformed Javadoc from src/extension/features/cxlang/cxlang-tokenizer.feature.ts*
+
+<div id="public-nexttokenindex-from-number-0-number"></div><!-- alias: public-nexttokenindex -->
+
+### `// public nextTokenIndex(from: number = 0): number`
+
+
+Index of next non-whitespace token
+- *param* `from` &mdash; optional start index
+- *returns* &mdash; index or -1 if line end reached
+
+
+
+
+---
+
 *transformed Javadoc from src/extension/features/documentation/docdecl-html-transformer.ts*
 
 <div id="class-docdeclhtmltransformer"></div><!-- alias: docdeclhtmltransformer -->
@@ -405,6 +442,16 @@ Returns DocDecl by uid (must match exactly, always 6 digits)
 - *returns* &mdash; matching `DocDecl` or `null`
 
 
+<div id="public-getchild-ident-string-docdecl-null"></div><!-- alias: getchild -->
+
+### `public getChild(ident: string): DocDecl|null`
+
+
+Returns child decl by ident
+- *param* `ident` &mdash; identifier to match
+- *returns* &mdash; matching `DocDecl` or `null`
+
+
 <div id="public-gettextofchild-kind-string-string"></div><!-- alias: gettextofchild -->
 
 ### `public getTextOfChild(kind: string): string`
@@ -433,16 +480,6 @@ full path (uident) for this decl (and cache, speeds things up)
 - *returns* &mdash; full path as string
 
 
-<div id="public-find-ident-string-docdecl-null"></div><!-- alias: find -->
-
-### `public find(ident: string): DocDecl|null`
-
-
-Find child decl by ident
-- *param* `ident` &mdash; identifier to match
-- *returns* &mdash; matching `DocDecl` or `null`
-
-
 
 
 ---
@@ -469,6 +506,24 @@ Root DocDecl
 
 currently (navigated to) DocDecl
 
+<div id="private-static-history-docdecl"></div><!-- alias: history -->
+
+### `private static history: DocDecl[] = []`
+
+history of navigated DocDecl
+
+<div id="private-static-historyrev-docdecl"></div><!-- alias: historyrev -->
+
+### `private static historyRev: DocDecl[] = []`
+
+when going back, this is the stack of "forward" DocDecl
+
+<div id="private-static-panel-vscode-webviewpanel"></div><!-- alias: panel -->
+
+### `private static panel: vscode.WebviewPanel`
+
+panel
+
 <div id="private-static-webview-vscode-webview"></div><!-- alias: webview -->
 
 ### `private static webview: vscode.Webview`
@@ -484,9 +539,9 @@ Invokes makedocs to build the docs
 - *returns* &mdash; Promise resolving when done
 
 
-<div id="public-static-show-void"></div><!-- alias: show -->
+<div id="public-static-init-void"></div><!-- alias: init -->
 
-### `public static show(): void`
+### `public static init(): void`
 
 
 Registers the feature and prepares components
@@ -498,6 +553,22 @@ Registers the feature and prepares components
 
 
 Loads declarations from `docs/html/decls.json`
+
+
+<div id="public-static-cannavback-boolean"></div><!-- alias: cannavback -->
+
+### `public static canNavBack(): boolean`
+
+
+Whether navigating back is possible
+
+
+<div id="public-static-cannavfwd-boolean"></div><!-- alias: cannavfwd -->
+
+### `public static canNavFwd(): boolean`
+
+
+Whether navigating forward is possible
 
 
 
@@ -548,9 +619,9 @@ Initializes provider
 - *param* `context` &mdash; `vscode.ExtensionContext`
 
 
-<div id="public-provideontypeformattingedits-document-vscode-textdocument-position-vscode-position-char-string-options-vscode-formattingoptions-token-vscode-cancellationtoken-vscode-providerresult-vscode-textedit"></div><!-- alias: provideontypeformattingedits -->
+<div id="public-provideontypeformattingedits-document-vscode-textdocument-position-vscode-position-char-string-options-vscode-formattingoptions-ctoken-vscode-cancellationtoken-vscode-providerresult-vscode-textedit"></div><!-- alias: provideontypeformattingedits -->
 
-### `public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]>`
+### `public provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, char: string, options: vscode.FormattingOptions, ctoken: vscode.CancellationToken): vscode.ProviderResult<vscode.TextEdit[]>`
 
 
 Provides on type formatting edits. Invoked automatically by VS Code
