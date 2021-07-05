@@ -18,6 +18,8 @@ export class CxDocumentation {
   private static history: DocDecl[] = [];
   /** when going back, this is the stack of "forward" DocDecl */
   private static historyRev: DocDecl[] = [];
+  /** panel */
+  private static panel: vscode.WebviewPanel;
   /** webview (instance needed for navigating and stuff) */
   private static webview: vscode.Webview;
 
@@ -41,7 +43,7 @@ export class CxDocumentation {
    */
   public static init(): void {
     // create web panel
-    let panel = vscode.window.createWebviewPanel(
+    this.panel = vscode.window.createWebviewPanel(
       'cerberus-x.documentation',
       'Cerberus X Documentation',
       {
@@ -56,15 +58,19 @@ export class CxDocumentation {
         localResourceRoots: [vscode.Uri.file( CxConfiguration.get('path') )]
       }
     )
+    this.panel.onDidDispose(() => {
+      this.panel = null as unknown as vscode.WebviewPanel;
+    });
+
     // populate web view
-    this.webview = panel.webview;
+    this.webview = this.panel.webview;
 
     // initialize transformer and get html for current decl
     DocDeclHtmlTransformer.setWebview(this.webview);
     this.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
 
     // simple navigation
-    panel.webview.onDidReceiveMessage(
+    this.panel.webview.onDidReceiveMessage(
       (message) => {
         switch (message.command) {
           // navigate to given site
@@ -73,7 +79,7 @@ export class CxDocumentation {
             this.historyRev = [];
             this.currentDecl = DocDecl.getByUid(message.text) || this.rootDecl;
             vscode.window.showInformationMessage('by id '+message.text);
-            panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+            this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate to ident
           case 'navigate':
@@ -82,7 +88,7 @@ export class CxDocumentation {
             const navResults = DocDecl.getByIdent(message.text);
             this.currentDecl = navResults ? navResults[0] : this.rootDecl;
             vscode.window.showInformationMessage('by ident '+message.text);
-            panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+            this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate back
           case 'navBwd':
@@ -90,7 +96,7 @@ export class CxDocumentation {
             if (rev) {
               this.historyRev.unshift(this.currentDecl);
               this.currentDecl = rev;
-              panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+              this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             }
             break;
           // navigate forward
@@ -99,7 +105,7 @@ export class CxDocumentation {
             if (rrev) {
               this.history.unshift(this.currentDecl);
               this.currentDecl = rrev;
-              panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+              this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             }
             break;
           // search
@@ -109,7 +115,7 @@ export class CxDocumentation {
             const results = DocDecl.getByIdent(message.text);
             this.currentDecl = results ? results[0] : this.rootDecl;
             vscode.window.showInformationMessage('searched '+message.text);
-            panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
+            this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           default:
             vscode.window.showInformationMessage('Unknown message type from webview recieved.')
@@ -120,7 +126,9 @@ export class CxDocumentation {
   }
 
   public static show(args: any = undefined): void {
-    if (!this.webview) this.init();
+    if (!this.panel) {
+      this.init();
+    }
     // start decl given?
     if (args?.autolocate == 'curpos') {
       const editor = vscode.window.activeTextEditor;
