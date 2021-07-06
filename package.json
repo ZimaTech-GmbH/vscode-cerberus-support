@@ -4,8 +4,12 @@
 	"description": "Support for the language Cerberus X",
 	"version": "0.1.2",
 	"publisher": "ZimaTechGmbH",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ZimaTech-GmbH/vscode-cerberus-support.git"
+	},
 	"engines": {
-		"vscode": "^1.45.0"
+		"vscode": "^1.56.0"
 	},
 	"categories": [
 		"Other"
