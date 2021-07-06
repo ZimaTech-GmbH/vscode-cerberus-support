@@ -9,8 +9,8 @@ export class CxLangSemanter {
   private static token: CxLangToken|null = null;
 
   public static semant(tokenized: CxLangTokenizedDocument): CxLangSemant[] {
-    console.log('semanting');
-    let start = Date.now();
+    // console.log('semanting');
+    // let start = Date.now();
 
     // TODO: only changed tokens ?
 
@@ -23,29 +23,23 @@ export class CxLangSemanter {
     this.token = null;
 
     const semants: CxLangSemant[] = [];
-    // const doc = new CxLangSemant(CxLangSemantType.Document, undefined);
 
     let token: CxLangToken|null;
     while (token = this.nextRelevantToken(true)) {
       let semant: CxLangSemant|null;
-      // console.log(token?.text);
       if (semant = this.currentStorageDecl()) {
-        // doc.appendChild(semant);
         semants.push(semant);
       }
       else if (semant = this.currentFunctionDecl()) {
-        // doc.appendChild(semant);
         semants.push(semant);
       }
       else if (semant = this.currentClassDecl()) {
-        // doc.appendChild(semant);
         semants.push(semant);
       }
       else if (semant = this.currentIfBlock()) {
         semants.push(semant);
       }
       else if (token.isIn(['select', 'while', 'repeat', 'for'])) {
-        // doc.appendChild(
         semants.push(
           new CxLangSemant(CxLangSemantType.Scope, token)
         );
@@ -64,21 +58,10 @@ export class CxLangSemanter {
       }
     }
 
-    let end = Date.now();
-    console.log(`semanted in ${end-start}ms`);
+    // let end = Date.now();
+    // console.log(`semanted in ${end-start}ms`);
 
-    // for (let index = 0; index < tokenized.lines.length; index++) {
-    //   const line = tokenized.lines[index];
-    //   let oline = '';
-    //   for (const token of line.tokens) {
-    //     oline += `${token.type}:${token.text}|`;
-    //   }
-    //   // console.log(oline);
-    // }
-
-    // console.log(doc);
     return semants;
-
   }
 
   /* all the joy lies here */
@@ -305,7 +288,6 @@ export class CxLangSemanter {
 
   // expression; [unary-operator] expression [operator expression]
   private static currentExpression(): CxLangSemant|null {
-    // const childs: CxLangSemant[] = [];
     const token = this.token;
     if (token?.is('new')) {
       this.nextRelevantToken();
@@ -511,7 +493,6 @@ export class CxLangSemant {
    * Returns the definitions following the identifier as pretty printed string
    */
   public getDetailsText(): string {
-    // console.log('getting details for', this);
     let texts: string[] = [];
     let acquire = false;
     if (this.childs) {

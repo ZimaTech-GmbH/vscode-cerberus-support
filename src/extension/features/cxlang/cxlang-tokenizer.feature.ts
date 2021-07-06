@@ -4,8 +4,8 @@ export class CxLangTokenizer {
   private static documents = new WeakMap<vscode.TextDocument, CxLangTokenizedDocument>();
 
   public static tokenize(document: vscode.TextDocument): CxLangTokenizedDocument {
-    console.log('tokenizing');
-    let start = Date.now();
+    // console.log('tokenizing');
+    // let start = Date.now();
     let tokenized = this.documents.get(document);
     if (!tokenized) {
       tokenized = new CxLangTokenizedDocument(document);
@@ -74,8 +74,8 @@ export class CxLangTokenizer {
     }
     tokenized.lines = tlines;
     tokenized.lineCount = document.lineCount;
-    let end = Date.now();
-    console.log(`tokenized ${endIndex - startIndex} lines in ${end-start}ms`);
+    // let end = Date.now();
+    // console.log(`tokenized ${endIndex - startIndex} lines in ${end-start}ms`);
     return tokenized;
   }
 }
@@ -106,7 +106,6 @@ export class CxLangTokenizedLine {
     this.text = line.text;
     this._text = this.text;
     this._charIndex = 0;
-    // console.log('tokenizing ' + this._text);
     while (true) {
       // in comment blocks, only look for end of comment
       if (stack.includes('r')) {
@@ -190,13 +189,6 @@ export class CxLangTokenizedLine {
       }
     }
     this.pcsStackAtLineEnd = stack;
-    // debug
-    // let oline = '';
-    // for (const token of this.tokens) {
-    //   oline = oline + `${token.type}:${token.text}|`;
-    // }
-    // oline = oline + stack;
-    // console.log(oline);
   }
 
   private tokenizes(pattern: RegExp, ttype: CxLangTokenType): boolean {
@@ -232,46 +224,6 @@ export class CxLangTokenizedLine {
     }
     return true;
   }
-
-  // public nextNonWhitespaceToken(from: number = 0): CxLangToken|null {
-  //   for (let index = from; index < this.tokens.length; index++) {
-  //     const token = this.tokens[index];
-  //     if (token.type != CxLangTokenType.Whitespace) return token;
-  //   }
-  //   return null;
-  // }
-
-  // private nextIndexWhenType(from: CxLangToken|null = null, type: CxLangTokenType): number {
-  //   const i0 = from ? from.index+1 : 0;
-  //   for (let index = i0; index < this.tokens.length; index++) {
-  //     const token = this.tokens[index];
-  //     if (token.type == type) return index;
-  //     if (token.type != CxLangTokenType.Whitespace) return -1;
-  //   }
-  //   return -1;
-  // }
-
-  // private nextIndexWhenTypeIn(from: CxLangToken|null = null, types: CxLangTokenType[]): number {
-  //   const i0 = from ? from.index+1 : 0;
-  //   for (let index = i0; index < this.tokens.length; index++) {
-  //     const token = this.tokens[index];
-  //     if (types.includes(token.type)) return index;
-  //     if (token.type != CxLangTokenType.Whitespace) return -1;
-  //   }
-  //   return -1;
-  // }
-
-  /**
-   * Index of next non-whitespace token
-   * @param from optional start index
-   * @returns index or -1 if line end reached
-   */
-  // public nextTokenIndex(from: number = 0): number {
-  //   for (let i = from; i < this.tokens.length; i++) {
-  //     if (this.tokens[i].type != CxLangTokenType.Whitespace) return i;
-  //   }
-  //   return -1;
-  // }
 }
 
 export enum CxLangTokenType {
