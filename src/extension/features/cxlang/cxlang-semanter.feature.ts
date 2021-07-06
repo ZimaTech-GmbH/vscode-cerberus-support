@@ -50,6 +50,12 @@ export class CxLangSemanter {
           new CxLangSemant(CxLangSemantType.Scope, token)
         );
       }
+      else if (token.isIn(['else', 'elseif'])) {
+        semants.push(
+          new CxLangSemant(CxLangSemantType.EndScope, token),
+          new CxLangSemant(CxLangSemantType.Scope, token)
+        );
+      }
       else if (token.isIn(['end', 'endif', 'wend', 'forever', 'until', 'next'])) {
         // doc.appendChild(
         semants.push(
