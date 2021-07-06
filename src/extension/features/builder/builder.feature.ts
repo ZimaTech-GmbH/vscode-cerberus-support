@@ -39,7 +39,7 @@ export class CxBuilder {
    */
   public static build(file: string, args: string[]): Promise<void> {
     const title = 'Building: ' + file;
-    const transccPath: string = CxConfiguration.get('transccPath');
+    const transccPath: string = CxConfiguration.transccPath || 'undefined';
     const paths = {'transcc': transccPath};
     args = [...args, file];
     return CxChildProcess.spawn(title, paths, transccPath, args);
@@ -53,7 +53,7 @@ export class CxBuilder {
     const file = this.cerberusGetBuildFile();
     if (file) {
       return this.build(file, ['-target="Html5_Game"']).then(() => {
-        const cserverPath: string = CxConfiguration.get('cserverPath');
+        const cserverPath: string = CxConfiguration.cserverPath || 'undefined';
         const gamePath = file.replace(/cxs$/,
           'build' + CxConfiguration.version + '/html5/CerberusGame.html'
         );
