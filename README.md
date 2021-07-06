@@ -31,7 +31,6 @@ This file was auto-generated with `zdoccer.js` 1.3.0
       - [`public static set(section: string, value: any, target: vscode.ConfigurationTarget = vscode.ConfigurationTarget.Workspace): Thenable<void>`](#public-static-set-section-string-value-any-target-vscode-configurationtarget-vscode-configurationtarget-workspace-thenable-void)
       - [`public static onConfigurationValid(callback: ()=>void): void`](#public-static-onconfigurationvalid-callback-void-void)
       - [`public getDetailsText(): string`](#public-getdetailstext-string)
-      - [`// public nextTokenIndex(from: number = 0): number`](#public-nexttokenindex-from-number-0-number)
     - [`class DocDeclHtmlTransformer`](#class-docdeclhtmltransformer)
       - [`public static setWebview(webview: vscode.Webview)`](#public-static-setwebview-webview-vscode-webview)
       - [`public static transform(decl: DocDecl): string`](#public-static-transform-decl-docdecl-string)
@@ -367,22 +366,6 @@ Defines functions to be called when configuration is valid
 
 
 Returns the definitions following the identifier as pretty printed string
-
-
-
-
----
-
-*transformed Javadoc from src/extension/features/cxlang/cxlang-tokenizer.feature.ts*
-
-<div id="public-nexttokenindex-from-number-0-number"></div><!-- alias: public-nexttokenindex -->
-
-### `// public nextTokenIndex(from: number = 0): number`
-
-
-Index of next non-whitespace token
-- *param* `from` &mdash; optional start index
-- *returns* &mdash; index or -1 if line end reached
 
 
 
