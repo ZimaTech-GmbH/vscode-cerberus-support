@@ -78,7 +78,7 @@ export class CxDocumentation {
             this.history.unshift(this.currentDecl);
             this.historyRev = [];
             this.currentDecl = DocDecl.getByUid(message.text) || this.rootDecl;
-            vscode.window.showInformationMessage('by id '+message.text);
+            // vscode.window.showInformationMessage('by id '+message.text);
             this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate to ident
@@ -87,7 +87,7 @@ export class CxDocumentation {
             this.historyRev = [];
             const navResults = DocDecl.getByIdent(message.text);
             this.currentDecl = navResults ? navResults[0] : this.rootDecl;
-            vscode.window.showInformationMessage('by ident '+message.text);
+            // vscode.window.showInformationMessage('by ident '+message.text);
             this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           // navigate back
@@ -114,7 +114,7 @@ export class CxDocumentation {
             this.historyRev = [];
             const results = DocDecl.getByIdent(message.text);
             this.currentDecl = results ? results[0] : this.rootDecl;
-            vscode.window.showInformationMessage('searched '+message.text);
+            // vscode.window.showInformationMessage('searched '+message.text);
             this.panel.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
             break;
           default:
@@ -142,7 +142,7 @@ export class CxDocumentation {
         // TODO: find by ident
         const results = DocDecl.getByIdent(word);
         this.currentDecl = results ? results[0] : this.rootDecl;
-        vscode.window.showInformationMessage('searched '+word);
+        // vscode.window.showInformationMessage('searched '+word);
         this.webview.html = DocDeclHtmlTransformer.transform(this.currentDecl);
       }
     }
