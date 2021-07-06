@@ -221,7 +221,6 @@ export class CxConfiguration {
       // when path was selected, set in config and check config again
       if (path && path[0]) {
         await this.set('path', path[0].fsPath, vscode.ConfigurationTarget.Global);
-        this.validate();
       }
     });
   }

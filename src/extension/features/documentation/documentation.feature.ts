@@ -165,7 +165,7 @@ export class CxDocumentation {
           // start navigating at Home
           const results = DocDecl.getByIdent('Home');
           this.currentDecl = results ? results[0] : this.rootDecl;
-          const actShowHelp = 'Show Help';
+          const actShowHelp = 'Show documentation';
           vscode.window.showInformationMessage('Cerberus X decls loaded', actShowHelp).then(
             (action) => {
               if (action == actShowHelp) {
@@ -176,7 +176,7 @@ export class CxDocumentation {
         }
       },
       (err) => {
-        const rebuildHelp = 'Rebuild Help';
+        const rebuildHelp = 'Rebuild documentation';
         vscode.window.showErrorMessage(err.message, rebuildHelp).then((selected) => {
           if (selected == rebuildHelp) {
             this.build().then(() => {this.loadDecls()});

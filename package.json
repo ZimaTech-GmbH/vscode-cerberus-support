@@ -48,7 +48,7 @@
 			},
 			{
 				"category": "Cerberus X",
-				"title": "Show Cerberus X Documentation",
+				"title": "Show Cerberus X documentation",
 				"command": "cerberus-x.showDocumentation"
 			},
 			{
