@@ -1,4 +1,4 @@
-This file was auto-generated with `zdoccer.js` 1.3.0
+This file was auto-generated with `zdoccer.js` 1.4.0
 
 # Index
 
@@ -144,9 +144,9 @@ Or a single line comment of the following form:
 
 If `<line of code to be documented>` is not empty, it will be prepended to the markdown block.
 
-To update the `README.md`, run the `zdoccer.js` script:
+To update the `README.md`, run `zdoccer`:
 ```
-node zdoccer.js src
+npx zdoccer src
 ```
 
 <div id="sourcecode-documentation"></div><!-- alias: sourcecode-documentation -->
