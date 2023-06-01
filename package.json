@@ -9,15 +9,13 @@
 		"url": "https://github.com/ZimaTech-GmbH/vscode-cerberus-support.git"
 	},
 	"engines": {
-		"vscode": "^1.65.0"
+		"vscode": "^1.78.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:cerberus-x.helloWorld",
-		"onCommand:cerberus-x.showDocumentation",
-		"onLanguage:cerberus-x"
+		"onCommand:cerberus-x.helloWorld"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -113,17 +111,17 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.2.0",
-		"@types/mocha": "^9.1.0",
-		"@types/node": "^14.x",
-		"@types/vscode": "^1.65.0",
-		"@typescript-eslint/eslint-plugin": "^5.12.1",
-		"@typescript-eslint/parser": "^5.12.1",
-		"@vscode/test-electron": "^2.1.2",
-		"@zimatech/zdoccer": "^1.4.0",
-		"eslint": "^8.9.0",
-		"glob": "^7.2.0",
-		"mocha": "^9.2.1",
-		"typescript": "^4.5.5"
+		"@types/glob": "^8.1.0",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^16.x",
+		"@types/vscode": "^1.78.0",
+		"@typescript-eslint/eslint-plugin": "^5.59.1",
+		"@typescript-eslint/parser": "^5.59.1",
+		"@vscode/test-electron": "^2.3.0",
+		"@zimatech/zdoccer": "^2.0.3",
+		"eslint": "^8.39.0",
+		"glob": "^8.1.0",
+		"mocha": "^10.2.0",
+		"typescript": "^5.0.4"
 	}
 }
